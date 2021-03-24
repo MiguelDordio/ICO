@@ -1,0 +1,14 @@
+<div>
+    <h1>Trabalho de ICO e todas aquelas cenas fixes</h1>
+
+    <p>Botão para comunicar com o backend em PITON</p>
+    <br/>
+    <button style="width: 100px; height: 50px;align-items: center;" (click)="apiTest()">Toca-me</button>
+
+    <p>Resposta do backend:</p>
+    <div *ngIf="apiResponse">
+        {{ apiResponse.username }}
+    </div>
+
+    <p>Vamos nessa Vanessa</p>
+</div>
