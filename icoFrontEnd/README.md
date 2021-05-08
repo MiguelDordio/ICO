@@ -2,6 +2,19 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.5.
 
+## Angular Setup
+
+Run `npm install -g @angular/cli` (for macs: `sudo npm install -g @angular/cli`)
+
+## BootStrap install
+
+* Run `npm install bootstrap` 
+* Run `npm install jquery`
+* Open Angular.json
+  * projects->architect->build->styles array: "node_modules/bootstrap/dist/css/bootstrap.css"
+  * projects->architect->build->scripts array: "node_modules/bootstrap/dist/js/bootstrap.js", "node_modules/bootstrap/dist/js/bootstrap.js"
+
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
