@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 
 @Component({
-  selector: 'app-homepage',
+  selector: 'homepage',
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.scss']
 })
@@ -13,6 +13,7 @@ export class HomepageComponent implements OnInit {
     constructor(private algoApi: ApiService) { }
 
     ngOnInit(): void {
+		console.log("Home Page");
     }
 
 	apiTest() {	
