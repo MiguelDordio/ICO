@@ -10,13 +10,12 @@ const httpOptions = {
 	})
 }
 
-
 @Injectable({
- 	providedIn: 'root'
+  providedIn: 'root'
 })
-export class ApiService {
+export class SimulatorApiService {
 
-  	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient) { }
 
 	getStuff(): Observable<{}> {
 		return this.http.post(environment.apiUrl + '/hello', httpOptions)

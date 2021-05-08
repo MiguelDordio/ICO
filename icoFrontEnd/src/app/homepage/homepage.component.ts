@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
 
 @Component({
   selector: 'homepage',
@@ -8,20 +7,9 @@ import { ApiService } from '../api.service';
 })
 export class HomepageComponent implements OnInit {
 
-    apiResponse: any;
-
-    constructor(private algoApi: ApiService) { }
+    constructor() { }
 
     ngOnInit(): void {
 		console.log("Home Page");
     }
-
-	apiTest() {	
-		this.algoApi.getStuff().subscribe(resp => {
-			this.apiResponse = resp;
-			console.log("Fetching for stuff:", resp);
-			console.log("Fetched:", this.apiResponse.username);
-		});
-	}
-
 }

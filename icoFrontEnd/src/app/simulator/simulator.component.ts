@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SimulatorApiService } from '../simulator-api.service';
 
 @Component({
   selector: 'simulator',
@@ -7,10 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SimulatorComponent implements OnInit {
 
-	constructor() { }
+	apiResponse: any;
+
+	constructor(private simulatorApi: SimulatorApiService) { }
 
 	ngOnInit(): void {
 		console.log("Simulator Page");
+	}
+
+	simulate() {
+
+		this.simulatorApi.getStuff().subscribe(resp => {
+			this.apiResponse = resp;
+			console.log("Stuff fetched:", resp);
+		});
+		console.log("Simulação espetacular!")
+
+		// depois redirecionar para página de resultados
 	}
 
 }
