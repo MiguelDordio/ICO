@@ -6,4 +6,5 @@ export enum PagesRoute {
     HOME = 'homepage',
     MAP = "map",
     SIMULATOR = 'simulator',
+    SIMULATOR_SOLUTION = 'simulator-solution'
 }

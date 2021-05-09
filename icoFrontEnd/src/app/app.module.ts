@@ -8,14 +8,16 @@ import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SimulatorComponent } from './simulator/simulator.component';
-import { MapComponent } from './map/map.component'
+import { MapComponent } from './map/map.component';
+import { SimulatorSolutionComponent } from './simulator-solution/simulator-solution.component'
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
     NavBarComponent,
     SimulatorComponent,
-    MapComponent
+    MapComponent,
+    SimulatorSolutionComponent
   ],
   imports: [
     BrowserModule,

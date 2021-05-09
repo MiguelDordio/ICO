@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlgorithmRequest } from '../models/AlgorithmRequest';
+import { PagesRoute } from '../models/routingPaths';
 import { SimulatorApiService } from '../simulator-api.service';
 
 @Component({
@@ -14,7 +16,7 @@ export class SimulatorComponent implements OnInit {
 	maxCargo!: number;
 	nDestinies!: number;
 
-	constructor(private simulatorApi: SimulatorApiService) { }
+	constructor(private simulatorApi: SimulatorApiService, private route: ActivatedRoute, private router: Router) { }
 
 	ngOnInit(): void {
 		console.log("Simulator Page");
@@ -25,10 +27,11 @@ export class SimulatorComponent implements OnInit {
 		this.simulatorApi.simulate(request).subscribe(resp => {
 			this.apiResponse = resp;
 			console.log("Solution fetched:", resp);
+			this.goToSolutionDisplay()
 		});
-		
-
-		// depois redirecionar para página de resultados
 	}
 
+	goToSolutionDisplay() {
+		this.router.navigate(["/" + PagesRoute.SIMULATOR_SOLUTION, this.apiResponse]);
+	}
 }
