@@ -15,6 +15,7 @@
           id="formTextExample1"
           class="form-control"
           aria-describedby="textExample1"
+          [(ngModel)]="nVehicles"
           placeholder="Número de veiculos"/>
     </div>
     <div id="textExample1" class="form-text">
@@ -28,6 +29,7 @@
           id="formTextExample1"
           class="form-control"
           aria-describedby="textExample1"
+          [(ngModel)]="maxCargo"
           placeholder="Carga máxima por veiculo"/>
     </div>
     <div id="textExample1" class="form-text">
@@ -41,6 +43,7 @@
           id="formTextExample1"
           class="form-control"
           aria-describedby="textExample1"
+          [(ngModel)]="nDestinies"
           placeholder="Número de destinos"/>
     </div>
     <div id="textExample1" class="form-text">
@@ -49,8 +52,8 @@
 
     <button 
         type="button" 
-        class="btn btn-primary" s
-        tyle="margin-top: 25px;" 
+        class="btn btn-primary" 
+        style="margin-top: 25px;" 
         (click)="simulate()">
         Simular
     </button>

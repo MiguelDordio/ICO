@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlgorithmRequest } from '../models/AlgorithmRequest';
 import { SimulatorApiService } from '../simulator-api.service';
 
 @Component({
@@ -9,6 +10,9 @@ import { SimulatorApiService } from '../simulator-api.service';
 export class SimulatorComponent implements OnInit {
 
 	apiResponse: any;
+	nVehicles!: number;
+	maxCargo!: number;
+	nDestinies!: number;
 
 	constructor(private simulatorApi: SimulatorApiService) { }
 
@@ -17,12 +21,12 @@ export class SimulatorComponent implements OnInit {
 	}
 
 	simulate() {
-
-		this.simulatorApi.getStuff().subscribe(resp => {
+		let request: AlgorithmRequest = new AlgorithmRequest(this.nVehicles, this.maxCargo, this.nDestinies);
+		this.simulatorApi.simulate(request).subscribe(resp => {
 			this.apiResponse = resp;
-			console.log("Stuff fetched:", resp);
+			console.log("Solution fetched:", resp);
 		});
-		console.log("Simulação espetacular!")
+		
 
 		// depois redirecionar para página de resultados
 	}
