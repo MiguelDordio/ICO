@@ -9,6 +9,7 @@ public class AlgorithmRequest {
     private int maxCargo;
     private double vehicleConsumption;
     private int nDestinies;
+    private int demand;
 
     @Override
     public String toString() {
@@ -17,6 +18,7 @@ public class AlgorithmRequest {
                 ", maxCargo=" + maxCargo +
                 ", vehicleConsumption=" + vehicleConsumption +
                 ", nDestinies=" + nDestinies +
+                ", demand=" + demand +
                 '}';
     }
 }
