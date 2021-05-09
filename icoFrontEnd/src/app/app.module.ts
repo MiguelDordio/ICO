@@ -9,7 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SimulatorComponent } from './simulator/simulator.component';
 import { MapComponent } from './map/map.component';
-import { SimulatorSolutionComponent } from './simulator-solution/simulator-solution.component'
+import { SimulatorSolutionComponent } from './simulator-solution/simulator-solution.component';
+import { ComponentNameComponent } from './component-name/component-name.component'
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +18,8 @@ import { SimulatorSolutionComponent } from './simulator-solution/simulator-solut
     NavBarComponent,
     SimulatorComponent,
     MapComponent,
-    SimulatorSolutionComponent
+    SimulatorSolutionComponent,
+    ComponentNameComponent
   ],
   imports: [
     BrowserModule,
