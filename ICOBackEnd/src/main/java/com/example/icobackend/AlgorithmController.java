@@ -24,7 +24,7 @@ public class AlgorithmController {
         // fazer coisas com o request
         System.out.println(algorithmRequest.toString());
         List<String> destinies = new ArrayList<>();
-        destinies.add("City111");
+        destinies.add("City1");
         destinies.add("City2");
         return new AlgorithmResponse(destinies);
     }
