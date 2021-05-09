@@ -4,11 +4,13 @@ export class AlgorithmRequest {
     maxCargo: number;
     vehicleConsumption: number;
     nDestinies: number;
+    demand: number;
 
-    constructor(nVehicles: number, maxCargo: number, vehicleConsumption: number, nDestinies: number) {
+    constructor(nVehicles: number, maxCargo: number, vehicleConsumption: number, nDestinies: number, demand:number) {
         this.nVehicles = nVehicles;
         this.maxCargo = maxCargo;
         this.vehicleConsumption = vehicleConsumption;
         this.nDestinies = nDestinies;
+        this.demand = demand
     }
 }

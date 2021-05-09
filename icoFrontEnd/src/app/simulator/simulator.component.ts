@@ -16,6 +16,7 @@ export class SimulatorComponent implements OnInit {
 	maxCargo!: number;
 	vehicleConsumption!: number;
 	nDestinies!: number;
+	demand!: number;
 
 	constructor(private simulatorApi: SimulatorApiService, private route: ActivatedRoute, private router: Router) { }
 
@@ -24,7 +25,7 @@ export class SimulatorComponent implements OnInit {
 	}
 
 	simulate() {
-		let request: AlgorithmRequest = new AlgorithmRequest(this.nVehicles, this.maxCargo, this.vehicleConsumption, this.nDestinies);
+		let request: AlgorithmRequest = new AlgorithmRequest(this.nVehicles, this.maxCargo, this.vehicleConsumption, this.nDestinies, this.demand);
 		this.simulatorApi.simulate(request).subscribe(resp => {
 			this.apiResponse = resp;
 			console.log("Solution fetched:", resp);
