@@ -36,6 +36,20 @@
         Indique a capacidade máxima dos seus veiculos
     </div>
 
+    <!-- Veichule gas comsuption -->
+    <div class="form-outline" style="margin-top: 25px;">
+        <input
+          type="text"
+          id="formTextExample1"
+          class="form-control"
+          aria-describedby="textExample1"
+          [(ngModel)]="vehicleConsumption"
+          placeholder="Consumo (litros/100km)"/>
+    </div>
+    <div id="textExample1" class="form-text">
+        Indique o consumo do veiculo em litros por 100km percorridos
+    </div>
+
     <!-- Number of destinies -->
     <div class="form-outline" style="margin-top: 25px;">
         <input
@@ -53,7 +67,7 @@
     <button 
         type="button" 
         class="btn btn-primary" 
-        style="margin-top: 25px;" 
+        style="margin-top: 25px; margin-bottom: 50px;" 
         (click)="simulate()">
         Simular
     </button>

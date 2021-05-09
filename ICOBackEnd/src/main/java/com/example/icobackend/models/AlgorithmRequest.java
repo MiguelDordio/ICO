@@ -7,6 +7,7 @@ public class AlgorithmRequest {
 
     private int nVehicles;
     private int maxCargo;
+    private double vehicleConsumption;
     private int nDestinies;
 
     @Override
@@ -14,6 +15,7 @@ public class AlgorithmRequest {
         return "AlgorithmRequest{" +
                 "nVehicles=" + nVehicles +
                 ", maxCargo=" + maxCargo +
+                ", vehicleConsumption=" + vehicleConsumption +
                 ", nDestinies=" + nDestinies +
                 '}';
     }
