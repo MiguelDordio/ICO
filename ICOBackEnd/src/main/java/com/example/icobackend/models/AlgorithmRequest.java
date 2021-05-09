@@ -2,21 +2,12 @@ package com.example.icobackend.models;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class AlgorithmRequest {
 
-    private int nVehicles;
-    private int maxCargo;
-    private double vehicleConsumption;
-    private int nDestinies;
-
-    @Override
-    public String toString() {
-        return "AlgorithmRequest{" +
-                "nVehicles=" + nVehicles +
-                ", maxCargo=" + maxCargo +
-                ", vehicleConsumption=" + vehicleConsumption +
-                ", nDestinies=" + nDestinies +
-                '}';
-    }
+    private List<Vehicle> vehicles;
+    private List<Order> orders;
+    // dias de entrega
 }
