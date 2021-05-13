@@ -7,7 +7,21 @@
 </p>
 
 
-<div class="input-form">
+<!-- Map -->
+<div class="map-style" [hidden]="!showMap">
+    <div class="map-style" id="map"></div>
+
+    <button 
+        type="button" 
+        class="btn btn-primary" 
+        style="margin: 25px auto 50px auto; float: right;" 
+        (click)="changePage()">
+        Continuar
+    </button>
+</div>
+
+<!-- Inputs -->
+<div *ngIf="!showMap" class="input-form">
     <!-- Number of veichules -->
     <div class="form-outline" style="margin-top: 25px;">
         <input
@@ -78,11 +92,20 @@
             Indique a quantidade da encomenda
         </div>
 
-    <button 
-        type="button" 
-        class="btn btn-primary" 
-        style="margin-top: 25px; margin-bottom: 50px;" 
-        (click)="simulate()">
-        Simular
-    </button>
+
+    <div>
+        <button 
+            type="button" 
+            class="btn btn-primary input-btn" 
+            (click)="changePage()">
+            Voltar
+        </button>
+
+        <button 
+            type="button" 
+            class="btn btn-primary input-btn" 
+            (click)="simulate()">
+            Simular
+        </button>
+    </div>
 </div>

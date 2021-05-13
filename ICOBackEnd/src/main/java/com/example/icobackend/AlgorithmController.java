@@ -1,5 +1,6 @@
 package com.example.icobackend;
 
+import com.example.icobackend.algorithm1.Algorithm;
 import com.example.icobackend.models.AlgorithmRequest;
 import com.example.icobackend.models.AlgorithmResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class AlgorithmController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     public AlgorithmResponse getSolutionsEvaluations(@RequestBody AlgorithmRequest algorithmRequest) {
         // fazer coisas com o request
+        Algorithm algo = new Algorithm(algorithmRequest);
+        algo.simulate();
         System.out.println(algorithmRequest.toString());
         List<String> destinies = new ArrayList<>();
         destinies.add("City1");
