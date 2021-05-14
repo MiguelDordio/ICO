@@ -1,109 +1,136 @@
 <nav-bar></nav-bar>
 
 
-<!-- Description -->
+<!-- Description 
 <p class="lead default-margin text-center">
     Simulador de Entregas <br/> Descubra a melhor solução para si
 </p>
+-->
 
-
-<!-- Map -->
-<div class="map-style" [hidden]="!showMap">
-    <div class="map-style" id="map"></div>
-
-    <button 
-        type="button" 
-        class="btn btn-primary" 
-        style="margin: 25px auto 50px auto; float: right;" 
-        (click)="changePage()">
-        Continuar
-    </button>
-</div>
-
-<!-- Inputs -->
-<div *ngIf="!showMap" class="input-form">
-    <!-- Number of veichules -->
-    <div class="form-outline" style="margin-top: 25px;">
-        <input
-          type="text"
-          id="formTextExample1"
-          class="form-control"
-          aria-describedby="textExample1"
-          [(ngModel)]="nVehicles"
-          placeholder="Número de veiculos"/>
+<div class="map-style">
+    <div class="lead default-margin text-center">
+        Passo {{ pageNumber }} - {{ pageTitle }} - {{ pageTip }}
     </div>
-    <div id="textExample1" class="form-text">
-        Indique a quantida de veiculos que a sua frota tem.
-    </div>
-
-    <!-- Veichule cargo -->
-    <div class="form-outline" style="margin-top: 25px;">
-        <input
-          type="text"
-          id="formTextExample1"
-          class="form-control"
-          aria-describedby="textExample1"
-          [(ngModel)]="maxCargo"
-          placeholder="Carga máxima por veiculo"/>
-    </div>
-    <div id="textExample1" class="form-text">
-        Indique a capacidade máxima dos seus veiculos
-    </div>
-
-    <!-- Veichule gas comsuption -->
-    <div class="form-outline" style="margin-top: 25px;">
-        <input
-          type="text"
-          id="formTextExample1"
-          class="form-control"
-          aria-describedby="textExample1"
-          [(ngModel)]="vehicleConsumption"
-          placeholder="Consumo (litros/100km)"/>
-    </div>
-    <div id="textExample1" class="form-text">
-        Indique o consumo do veiculo em litros por 100km percorridos
+    
+    <!-- Page 1 - Map -->
+    <div [hidden]="pageNumber != 1" class="map-style" id="map"></div>
+    
+    <!-- Page 2 - Vehicles -->
+    <div *ngIf="pageNumber == 2" class="input-form">    
+        <form [formGroup]="vehicleForm">
+            <div formArrayName="vehicles" *ngFor="let creds of vehicleForm.controls.vehicles?.value; let i = index">
+                <ng-container [formGroupName]="i">
+                    <p style="margin: 25px auto 0 auto;">Veiculo {{ i + 1 }}</p>
+                    <!-- Veichule cargo -->
+                    <div class="form-outline">
+                        <input
+                        type="text"
+                        id="formTextExample1"
+                        class="form-control"
+                        aria-describedby="textExample1"
+                        formControlName="maxCargo"
+                        placeholder="Carga máxima por veiculo"/>
+                    </div>
+                    <div id="textExample1" class="form-text">
+                        Indique a capacidade máxima dos seus veiculos
+                    </div>
+                
+                    <!-- Veichule gas comsuption -->
+                    <div class="form-outline" style="margin-top: 25px;">
+                        <input
+                        type="text"
+                        id="formTextExample1"
+                        class="form-control"
+                        aria-describedby="textExample1"
+                        formControlName="fuelConsumption"
+                        placeholder="Consumo (litros/100km)"/>
+                    </div>
+                    <div id="textExample1" class="form-text">
+                        Indique o consumo do veiculo em litros por 100km percorridos
+                    </div>
+                </ng-container>
+            </div>
+        </form>
     </div>
 
-    <!-- Number of destinies -->
-    <div class="form-outline" style="margin-top: 25px;">
-        <input
-          type="text"
-          id="formTextExample1"
-          class="form-control"
-          aria-describedby="textExample1"
-          [(ngModel)]="nDestinies"
-          placeholder="Número de destinos"/>
-    </div>
-    <div id="textExample1" class="form-text">
-        Indique quantos destinos são abrangidos
+    <!-- Page 3 - Packages -->
+    <div *ngIf="pageNumber == 3" class="input-form">
+        <form [formGroup]="packagesForm">
+            <div formArrayName="packages" *ngFor="let creds of packagesForm.controls.packages?.value; let i = index">
+                <ng-container [formGroupName]="i">
+                    <p style="margin: 25px auto 0 auto;">Encomenda {{ i + 1 }}</p>
+                    <!-- Package weight -->
+                    <div class="form-outline">
+                        <input
+                        type="text"
+                        id="formTextExample1"
+                        class="form-control"
+                        aria-describedby="textExample1"
+                        formControlName="weight"
+                        placeholder="Peso (Kg)"/>
+                    </div>
+                    <div id="textExample1" class="form-text">
+                        Indique o peso da encomenda
+                    </div>
+                </ng-container>
+            </div>
+        </form>
     </div>
 
-        <!-- Necessary Demand -->
-        <div class="form-outline" style="margin-top: 25px;">
-            <input
-              type="text"
-              id="formTextExample1"
-              class="form-control"
-              aria-describedby="textExample1"
-              [(ngModel)]="demand"
-              placeholder="Encomenda"/>
-        </div>
-        <div id="textExample1" class="form-text">
-            Indique a quantidade da encomenda
+    <!-- Page 4 - Simulation Resume -->
+    <div *ngIf="pageNumber == 4" class="input-form">
+
+        <!-- Locations -->
+        <p>Localizações</p>
+        <div *ngFor="let location of selectedCoordinates; let i = index">
+            <p style="margin: 25px auto 0 auto;" *ngIf="i == 0">Ármazem</p>
+            <p style="margin: 25px auto 0 auto;" *ngIf="i > 0">Cliente {{ i + 1 }}</p>
+            <p>Lat: {{ location.lat }} : Lng: {{ location.lng }}</p>
         </div>
 
-
+        <!-- Vehicles -->
+        <p>Veiculos</p>
+        <div *ngFor="let vehicle of vehicleForm.controls.vehicles?.value; let i = index">
+            <p style="margin: 25px auto 0 auto;">Veiculo {{ i + 1 }}</p>
+            <p>Peso: {{ vehicle.maxCargo }}</p>
+        </div>
+        
+        <!-- Packages -->
+        <p>Encomendas</p>
+        <div *ngFor="let package of packagesForm.controls.packages?.value; let i = index">
+            <p style="margin: 25px auto 0 auto;">Encomenda {{ i + 1 }}</p>
+            <p>Peso: {{ package.weight }}</p>
+        </div>
+    </div>
+    
+    <!-- Page control buttons -->
     <div>
-        <button 
+        <button *ngIf="pageNumber > 1"
             type="button" 
             class="btn btn-primary input-btn" 
-            (click)="changePage()">
+            (click)="changePage(true)">
             Voltar
         </button>
 
-        <button 
+        <button *ngIf="pageNumber == 2 || pageNumber == 3"
             type="button" 
             class="btn btn-primary input-btn" 
+            (click)="addItem()">
+            Adicionar
+        </button>
+    
+        <button *ngIf="pageNumber != 4"
+            type="button" 
+            class="btn btn-primary input-btn" 
+            style="margin: 25px auto 50px auto; float: right;"
+            (click)="changePage(false)">
+            Continuar
+        </button>
+    
+        <button *ngIf="pageNumber == 4"
+            type="button" 
+            class="btn btn-primary input-btn" 
+            style="margin: 25px auto 50px auto; float: right;"
             (click)="simulate()">
             Simular
         </button>
