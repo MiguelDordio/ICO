@@ -1,16 +1,11 @@
+import { Coordinate } from "./Coordinate";
+import { Order } from "./Order";
+import { Vehicle } from "./Vehicle";
+
 export class AlgorithmRequest {
     
-    nVehicles: number;
-    maxCargo: number;
-    vehicleConsumption: number;
-    nDestinies: number;
-    demand: number;
-
-    constructor(nVehicles: number, maxCargo: number, vehicleConsumption: number, nDestinies: number, demand:number) {
-        this.nVehicles = nVehicles;
-        this.maxCargo = maxCargo;
-        this.vehicleConsumption = vehicleConsumption;
-        this.nDestinies = nDestinies;
-        this.demand = demand
-    }
+    vehicles: Vehicle[] = new Array();
+    orders: Order[] = new Array();
+    depot!: Coordinate
+    
 }

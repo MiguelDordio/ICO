@@ -4,7 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Loader } from '@googlemaps/js-api-loader';
 import { AlgorithmRequest } from '../models/AlgorithmRequest';
 import { Coordinate } from '../models/Coordinate';
+import { Order } from '../models/Order';
 import { PagesRoute } from '../models/routingPaths';
+import { Vehicle } from '../models/Vehicle';
 import { SimulatorApiService } from '../simulator-api.service';
 
 @Component({
@@ -33,12 +35,21 @@ export class SimulatorComponent implements OnInit {
 	vehicleConsumption!: number;
 	nDestinies!: number;
 	demand!: number;
+	vehicleTypes: string[] = new Array('type_1', 'type_2', 'type_3');
+
+
+	// request
+	depot!: Coordinate;
+	clients: Coordinate[] = new Array();
+	chosenClients: Coordinate[] = new Array();
+	request!: AlgorithmRequest;
 
 	constructor(
 		private simulatorApi: SimulatorApiService, 
 		private route: ActivatedRoute, 
 		private router: Router,
 		private fb: FormBuilder) {
+
 			this.vehicleForm = this.fb.group({
 				vehicles: this.fb.array([]),
 			});
@@ -104,6 +115,9 @@ export class SimulatorComponent implements OnInit {
 		}
 		// From step 1 -> 2 - Vehicles
 		else if (this.pageNumber == 1){
+
+			this.prepareLocationsInputs();
+
 			this.showMap = !this.showMap;
 			this.pageNumber++;
 			this.pageTitle = "Veiculos";
@@ -117,11 +131,17 @@ export class SimulatorComponent implements OnInit {
 		} 
 		// From step 3 -> 4 - Simulation Resume
 		else if (this.pageNumber == 3) {
+			this.request = this.setupRequest();
 			this.pageNumber++;
 			this.pageTitle = "Resumo de simulação";
 			this.pageTip = "Confirme os dados";
 		}
 	}
+
+
+	/************************
+	 * Forms
+	 ************************/
 
 	addItem() {
 		if (this.pageNumber == 2)
@@ -132,22 +152,51 @@ export class SimulatorComponent implements OnInit {
 
 	addVehicle() {
 		const vhcs = this.vehicleForm.controls.vehicles as FormArray;
-		vhcs.push(this.fb.group({
-			maxCargo: '',
-			fuelConsumption: '',
-		}));
+		vhcs.push(this.fb.group(new Vehicle(0, 0, '')));
 	}
 
 	addPackage() {
 		const pack = this.packagesForm.controls.packages as FormArray;
-		pack.push(this.fb.group({
-			weight: ''
-		}));
+		pack.push(this.fb.group(new Order(0, new Coordinate(0, 0))));
+	}
+
+	prepareLocationsInputs() {
+		let index = 0;
+		this.selectedCoordinates.forEach( (location) => {
+			location.lat
+			index > 0 ? this.clients.push(location) : this.depot = location;
+			index++;
+		});
+	}
+
+	trackByFn(index: any, item: any) {
+		return index;  
+	}
+
+
+	/************************
+	 * Simulation
+	 ************************/
+
+	setupRequest() {
+		let algoRequest = new AlgorithmRequest();
+
+		this.vehicleForm.controls.vehicles?.value.forEach( (element: Vehicle) => {
+			algoRequest.vehicles.push(element);
+		});
+
+		this.packagesForm.controls.packages?.value.forEach( (element: Order) => {
+			algoRequest.orders.push(element);
+		});
+
+		algoRequest.depot = this.depot;
+
+		return algoRequest;
 	}
 
 	simulate() {
-		let request: AlgorithmRequest = new AlgorithmRequest(this.nVehicles, this.maxCargo, this.vehicleConsumption, this.nDestinies, this.demand);
-		this.simulatorApi.simulate(request).subscribe(resp => {
+		console.log("request:", this.request);
+		this.simulatorApi.simulate(this.request).subscribe(resp => {
 			this.apiResponse = resp;
 			console.log("Solution fetched:", resp);
 			this.goToSolutionDisplay()

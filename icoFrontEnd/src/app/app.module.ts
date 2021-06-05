@@ -10,7 +10,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SimulatorComponent } from './simulator/simulator.component';
 import { MapComponent } from './map/map.component';
 import { SimulatorSolutionComponent } from './simulator-solution/simulator-solution.component';
-import { ComponentNameComponent } from './component-name/component-name.component'
+import { ComponentNameComponent } from './component-name/component-name.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +27,8 @@ import { ComponentNameComponent } from './component-name/component-name.componen
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

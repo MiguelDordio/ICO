@@ -1,38 +1,35 @@
 package com.example.icobackend.models;
 
-import java.util.List;
+import lombok.Data;
 
+@Data
 public class Vehicle {
 
-    private double capacity;
-    private double fuelConsumption;
-    private List<Point> route;
+    private int capacity;
+    private double costPerDistance;
+    private String type;
 
-    public double getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(double capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
-    public double getFuelConsumption() {
-        return fuelConsumption;
+    public double getCostPerDistance() {
+        return costPerDistance;
     }
 
-    public void setFuelConsumption(double fuelConsumption) {
-        this.fuelConsumption = fuelConsumption;
+    public void setCostPerDistance(double costPerDistance) {
+        this.costPerDistance = costPerDistance;
     }
 
-    public List<Point> getRoute() {
-        return route;
+    public String getType() {
+        return type;
     }
 
-    public void setRoute(List<Point> route) {
-        this.route = route;
-    }
-
-    public void addToRoute(Point p) {
-        this.route.add(p);
+    public void setType(String type) {
+        this.type = type;
     }
 }

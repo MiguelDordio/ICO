@@ -18,36 +18,60 @@
     <!-- Page 2 - Vehicles -->
     <div *ngIf="pageNumber == 2" class="input-form">    
         <form [formGroup]="vehicleForm">
-            <div formArrayName="vehicles" *ngFor="let creds of vehicleForm.controls.vehicles?.value; let i = index">
+
+            <!--
+            <div class="form-inline" *ngFor="let line of vehicleForm.get('vehicles').controls; let i = index" formArrayName="lines">
+                <div class="form-group">
+                  <span [formGroupName]="i">
+                    <span *ngFor="let field of line.get('vehicles').controls; let j = index" formArrayName="fields">
+                        <input type="text" class="form-control" [formControlName]="capacity">
+                        Please Type on Input Field
+                    </span>
+                  </span>
+                </div>
+              </div>
+            -->
+
+            <div formArrayName="vehicles" *ngFor="let creds of vehicleForm.controls.vehicles?.value; let i = index; trackBy: trackByFn">
                 <ng-container [formGroupName]="i">
                     <p style="margin: 25px auto 0 auto;">Veiculo {{ i + 1 }}</p>
-                    <!-- Veichule cargo -->
+                    <!-- Veichule capacity -->
                     <div class="form-outline">
                         <input
                         type="text"
                         id="formTextExample1"
                         class="form-control"
                         aria-describedby="textExample1"
-                        formControlName="maxCargo"
+                        formControlName="capacity"
                         placeholder="Carga máxima por veiculo"/>
                     </div>
                     <div id="textExample1" class="form-text">
-                        Indique a capacidade máxima dos seus veiculos
+                        Indique a capacidade máxima do veiculo
                     </div>
                 
-                    <!-- Veichule gas comsuption -->
+                    <!-- Veichule cost per distance -->
                     <div class="form-outline" style="margin-top: 25px;">
                         <input
                         type="text"
                         id="formTextExample1"
                         class="form-control"
                         aria-describedby="textExample1"
-                        formControlName="fuelConsumption"
-                        placeholder="Consumo (litros/100km)"/>
+                        formControlName="costPerDistance"
+                        placeholder="Custo por cada 100Km"/>
                     </div>
                     <div id="textExample1" class="form-text">
-                        Indique o consumo do veiculo em litros por 100km percorridos
+                        Indique o custo médio do veiculo por cada 100km percorridos
                     </div>
+
+
+                    <!-- Vehicle type -->
+                    <div style="margin: 25px auto 0 auto;" class="form-group">
+                        <select formControlName="type" class="form-control">
+                            <option value="0">Indique o tipo de veiculo</option>
+                            <option *ngFor="let type of vehicleTypes" value="{{ type }}"> {{ type }}</option>
+                        </select>
+                    </div>
+
                 </ng-container>
             </div>
         </form>
@@ -56,7 +80,7 @@
     <!-- Page 3 - Packages -->
     <div *ngIf="pageNumber == 3" class="input-form">
         <form [formGroup]="packagesForm">
-            <div formArrayName="packages" *ngFor="let creds of packagesForm.controls.packages?.value; let i = index">
+            <div formArrayName="packages" *ngFor="let creds of packagesForm.controls.packages?.value; let i = index; trackBy: trackByFn">
                 <ng-container [formGroupName]="i">
                     <p style="margin: 25px auto 0 auto;">Encomenda {{ i + 1 }}</p>
                     <!-- Package weight -->
@@ -72,6 +96,19 @@
                     <div id="textExample1" class="form-text">
                         Indique o peso da encomenda
                     </div>
+
+                    <!-- Package destiny -->
+                    <div style="margin: 25px auto 0 auto;" class="form-group">
+                        <select formControlName="destiny" class="form-control">
+                            <option>Indique o destino</option>
+                            <option *ngFor="let client of clients; let j = index" [ngValue]="client">Cliente {{ j + 1 }}</option>
+                        </select>
+                        <!--
+                        <div *ngIf="packages.destiny.touched && packages.destiny.invalid" class="alert alert-danger">
+                            <div *ngIf="packages.destiny.errors.required">Name is required.</div>
+                        </div>
+                        -->
+                    </div>
                 </ng-container>
             </div>
         </form>
@@ -84,22 +121,25 @@
         <p>Localizações</p>
         <div *ngFor="let location of selectedCoordinates; let i = index">
             <p style="margin: 25px auto 0 auto;" *ngIf="i == 0">Ármazem</p>
-            <p style="margin: 25px auto 0 auto;" *ngIf="i > 0">Cliente {{ i + 1 }}</p>
-            <p>Lat: {{ location.lat }} : Lng: {{ location.lng }}</p>
+            <p style="margin: 25px auto 0 auto;" *ngIf="i > 0">Cliente {{ i }}</p>
+            <p style="margin-bottom: 0 !important;">Lat: {{ location.lat }} : Lng: {{ location.lng }}</p>
         </div>
 
         <!-- Vehicles -->
         <p>Veiculos</p>
-        <div *ngFor="let vehicle of vehicleForm.controls.vehicles?.value; let i = index">
-            <p style="margin: 25px auto 0 auto;">Veiculo {{ i + 1 }}</p>
-            <p>Peso: {{ vehicle.maxCargo }}</p>
+        <div *ngFor="let vehicle of request.vehicles; let i = index">
+            <p style="margin: 5px auto 0 auto;">Veiculo {{ i + 1 }}</p>
+            <p style="margin-bottom: 0 !important;">Capacidade: {{ vehicle.capacity }}</p>
+            <p style="margin-bottom: 0 !important;">Custo por 100Km percorridos: {{ vehicle.costPerDistance }}</p>
+            <p style="margin-bottom: 0 !important;">Tipo: {{ vehicle.type }}</p>
         </div>
         
         <!-- Packages -->
         <p>Encomendas</p>
-        <div *ngFor="let package of packagesForm.controls.packages?.value; let i = index">
-            <p style="margin: 25px auto 0 auto;">Encomenda {{ i + 1 }}</p>
-            <p>Peso: {{ package.weight }}</p>
+        <div *ngFor="let package of request.orders; let i = index">
+            <p style="margin: 5px auto 0 auto;">Encomenda {{ i + 1 }}</p>
+            <p style="margin-bottom: 0 !important;">Peso: {{ package.weight }}</p>
+            <p style="margin-bottom: 0 !important;">Cliente destino: Lat: {{ package.destiny.lat }} : Lng: {{ package.destiny.lng }}</p>
         </div>
     </div>
     

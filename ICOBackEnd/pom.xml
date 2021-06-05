@@ -38,6 +38,21 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Algorithm Library -->
+        <!-- https://mvnrepository.com/artifact/com.graphhopper/jsprit-core -->
+        <dependency>
+            <groupId>com.graphhopper</groupId>
+            <artifactId>jsprit-core</artifactId>
+            <version>1.8</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.graphhopper/jsprit-analysis -->
+        <dependency>
+            <groupId>com.graphhopper</groupId>
+            <artifactId>jsprit-analysis</artifactId>
+            <version>1.7</version>
+        </dependency>
     </dependencies>
 
     <build>

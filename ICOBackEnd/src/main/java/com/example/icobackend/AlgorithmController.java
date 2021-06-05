@@ -1,6 +1,7 @@
 package com.example.icobackend;
 
 import com.example.icobackend.algorithm1.Algorithm;
+import com.example.icobackend.algorithm1.VRPAlgorithm;
 import com.example.icobackend.models.AlgorithmRequest;
 import com.example.icobackend.models.AlgorithmResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,12 @@ public class AlgorithmController {
     @ResponseBody
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     public AlgorithmResponse getSolutionsEvaluations(@RequestBody AlgorithmRequest algorithmRequest) {
+
+        VRPAlgorithm vrpAlgorithm = new VRPAlgorithm();
+        vrpAlgorithm.simulate(algorithmRequest);
+
         // fazer coisas com o request
+        /*
         Algorithm algo = new Algorithm(algorithmRequest);
         algo.simulate();
         System.out.println(algorithmRequest.toString());
@@ -30,5 +36,7 @@ public class AlgorithmController {
         destinies.add("City1");
         destinies.add("City2");
         return new AlgorithmResponse(destinies);
+         */
+        return null;
     }
 }

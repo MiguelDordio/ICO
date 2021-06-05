@@ -1,17 +1,20 @@
 package com.example.icobackend.models;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class Order {
 
-    private String destiny;
+    private Coordinate destiny;
     private int weight;
 
-    public String getDestiny() {
+    public Coordinate getDestiny() {
         return destiny;
     }
 
-    public void setDestiny(String destiny) {
+    public void setDestiny(Coordinate destiny) {
         this.destiny = destiny;
     }
 

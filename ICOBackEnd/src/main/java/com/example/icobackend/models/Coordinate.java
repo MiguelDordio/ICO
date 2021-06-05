@@ -1,5 +1,8 @@
 package com.example.icobackend.models;
 
+import lombok.Data;
+
+@Data
 public class Coordinate {
 
     private double lat;

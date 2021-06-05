@@ -17,6 +17,7 @@ public class Algorithm {
         this.request = request;
     }
 
+
     private void initializeMap() {
         // Lisboa
         map[0][0] = new Point("Lisboa", "Lisboa", 0);
@@ -43,6 +44,7 @@ public class Algorithm {
         map[3][3] = new Point("Setubal", "Setubal", 0);
     }
 
+    /*
     public void simulate() {
 
         Point current = start;
@@ -129,4 +131,6 @@ public class Algorithm {
     private double getTime(Point s, Point e) {
         return getDistance(s, e) % 2 + 5;
     }
+
+     */
 }
