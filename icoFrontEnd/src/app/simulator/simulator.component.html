@@ -153,7 +153,6 @@
         <button *ngIf="pageNumber > 1"
             type="button" 
             class="btn btn-primary input-btn" 
-            style="background-color: cornflowerblue;"
             (click)="changePage(true)">
             Voltar
         </button>
@@ -161,7 +160,6 @@
         <button *ngIf="pageNumber == 2 || pageNumber == 3"
             type="button" 
             class="btn btn-primary input-btn" 
-            style="background-color: cornflowerblue;"
             (click)="addItem()">
             Adicionar
         </button>
@@ -169,7 +167,7 @@
         <button *ngIf="pageNumber != 4"
             type="button" 
             class="btn btn-primary input-btn" 
-            style="margin: 25px auto 50px auto; float: right;background-color: cornflowerblue;"
+            style="margin: 25px auto 50px auto; float: right"
             (click)="changePage(false)">
             Continuar
         </button>
@@ -177,7 +175,7 @@
         <button *ngIf="pageNumber == 4"
             type="button" 
             class="btn btn-primary input-btn" 
-            style="margin: 25px auto 50px auto; float: right; background-color: cornflowerblue;"
+            style="margin: 25px auto 50px auto; float: right"
             (click)="simulate()">
             Simular
         </button>
