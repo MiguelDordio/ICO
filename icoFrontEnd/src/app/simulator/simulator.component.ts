@@ -121,7 +121,7 @@ export class SimulatorComponent implements OnInit {
 			this.showMap = !this.showMap;
 			this.pageNumber++;
 			this.pageTitle = "Veiculos";
-			this.pageTip = "Caractize os seus veiculos";
+			this.pageTip = "Caracterize os seus veiculos";
 		}
 		// From step 2 -> 3 - Packages
 		else if (this.pageNumber == 2) {

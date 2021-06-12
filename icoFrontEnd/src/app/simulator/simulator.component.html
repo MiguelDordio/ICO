@@ -34,7 +34,7 @@
 
             <div formArrayName="vehicles" *ngFor="let creds of vehicleForm.controls.vehicles?.value; let i = index; trackBy: trackByFn">
                 <ng-container [formGroupName]="i">
-                    <p style="margin: 25px auto 0 auto;">Veiculo {{ i + 1 }}</p>
+                  <h4> <p style="margin: 25px auto 0 auto; text-align: center;">Veiculo {{ i + 1 }}</p></h4>
                     <!-- Veichule capacity -->
                     <div class="form-outline">
                         <input
@@ -71,7 +71,9 @@
                             <option *ngFor="let type of vehicleTypes" value="{{ type }}"> {{ type }}</option>
                         </select>
                     </div>
-
+                    <div id="textExample1" class="form-text">
+                        Indique o tipo de veiculo
+                    </div>
                 </ng-container>
             </div>
         </form>
@@ -82,7 +84,7 @@
         <form [formGroup]="packagesForm">
             <div formArrayName="packages" *ngFor="let creds of packagesForm.controls.packages?.value; let i = index; trackBy: trackByFn">
                 <ng-container [formGroupName]="i">
-                    <p style="margin: 25px auto 0 auto;">Encomenda {{ i + 1 }}</p>
+                   <h4> <p style="margin: 25px auto 0 auto;; text-align: center;">Encomenda {{ i + 1 }}</p></h4>
                     <!-- Package weight -->
                     <div class="form-outline">
                         <input
@@ -101,8 +103,11 @@
                     <div style="margin: 25px auto 0 auto;" class="form-group">
                         <select formControlName="destiny" class="form-control">
                             <option>Indique o destino</option>
-                            <option *ngFor="let client of clients; let j = index" [ngValue]="client">Cliente {{ j + 1 }}</option>
+                            <option *ngFor="let client of clients; let j = index" [ngValue]="client">Localização {{ j + 1 }}</option>
                         </select>
+                        <div id="textExample1" class="form-text">
+                            Indique o destino
+                        </div>
                         <!--
                         <div *ngIf="packages.destiny.touched && packages.destiny.invalid" class="alert alert-danger">
                             <div *ngIf="packages.destiny.errors.required">Name is required.</div>
@@ -118,7 +123,7 @@
     <div *ngIf="pageNumber == 4" class="input-form">
 
         <!-- Locations -->
-        <p>Localizações</p>
+        <h5><p style= "text-align: center">Localizações</p></h5>
         <div *ngFor="let location of selectedCoordinates; let i = index">
             <p style="margin: 25px auto 0 auto;" *ngIf="i == 0">Ármazem</p>
             <p style="margin: 25px auto 0 auto;" *ngIf="i > 0">Cliente {{ i }}</p>
@@ -126,18 +131,18 @@
         </div>
 
         <!-- Vehicles -->
-        <p>Veiculos</p>
+        <h5><p style= "text-align: center">Veiculos</p></h5>
         <div *ngFor="let vehicle of request.vehicles; let i = index">
-            <p style="margin: 5px auto 0 auto;">Veiculo {{ i + 1 }}</p>
+            <h6> <p style="margin: 5px auto 0 auto;">Veiculo {{ i + 1 }}</p></h6> 
             <p style="margin-bottom: 0 !important;">Capacidade: {{ vehicle.capacity }}</p>
             <p style="margin-bottom: 0 !important;">Custo por 100Km percorridos: {{ vehicle.costPerDistance }}</p>
             <p style="margin-bottom: 0 !important;">Tipo: {{ vehicle.type }}</p>
         </div>
         
         <!-- Packages -->
-        <p>Encomendas</p>
+        <h5><p style= "text-align: center">Encomendas</p></h5>
         <div *ngFor="let package of request.orders; let i = index">
-            <p style="margin: 5px auto 0 auto;">Encomenda {{ i + 1 }}</p>
+            <h6><p style="margin: 5px auto 0 auto;">Encomenda {{ i + 1 }}</p></h6>
             <p style="margin-bottom: 0 !important;">Peso: {{ package.weight }}</p>
             <p style="margin-bottom: 0 !important;">Cliente destino: Lat: {{ package.destiny.lat }} : Lng: {{ package.destiny.lng }}</p>
         </div>
@@ -148,6 +153,7 @@
         <button *ngIf="pageNumber > 1"
             type="button" 
             class="btn btn-primary input-btn" 
+            style="background-color: cornflowerblue;"
             (click)="changePage(true)">
             Voltar
         </button>
@@ -155,6 +161,7 @@
         <button *ngIf="pageNumber == 2 || pageNumber == 3"
             type="button" 
             class="btn btn-primary input-btn" 
+            style="background-color: cornflowerblue;"
             (click)="addItem()">
             Adicionar
         </button>
@@ -162,7 +169,7 @@
         <button *ngIf="pageNumber != 4"
             type="button" 
             class="btn btn-primary input-btn" 
-            style="margin: 25px auto 50px auto; float: right;"
+            style="margin: 25px auto 50px auto; float: right;background-color: cornflowerblue;"
             (click)="changePage(false)">
             Continuar
         </button>
@@ -170,7 +177,7 @@
         <button *ngIf="pageNumber == 4"
             type="button" 
             class="btn btn-primary input-btn" 
-            style="margin: 25px auto 50px auto; float: right;"
+            style="margin: 25px auto 50px auto; float: right; background-color: cornflowerblue;"
             (click)="simulate()">
             Simular
         </button>
