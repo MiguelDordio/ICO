@@ -1,5 +1,8 @@
+import { Coordinate } from "./Coordinate";
+
 export class AlgorithmResponse {
 
-    destiniesOrders!: string[][];
-
+    routes!: Coordinate[];
+    solutionCost!: number;
+    
 }

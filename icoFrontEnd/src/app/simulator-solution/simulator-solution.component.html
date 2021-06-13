@@ -1,1 +1,26 @@
-<p>simulator-solution works!</p>
+<nav-bar></nav-bar>
+
+<div>
+    <div class="lead default-margin text-center">
+        Rota encontrada
+    </div>
+    
+    <div class="div-center">
+        <ngx-graph
+        class="chart-container"
+        [view]="[800, 500]"
+        [showMiniMap]="false"
+        [links]="links"
+        [nodes]="nodes"
+        >
+        <ng-template #nodeTemplate let-node>
+            <svg:g class="node">
+              <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                [attr.fill]="node.data.color" />
+              <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}
+              </svg:text>
+            </svg:g>
+          </ng-template>
+        </ngx-graph>
+    </div>
+</div>

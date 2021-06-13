@@ -11,7 +11,9 @@ import { SimulatorComponent } from './simulator/simulator.component';
 import { MapComponent } from './map/map.component';
 import { SimulatorSolutionComponent } from './simulator-solution/simulator-solution.component';
 import { ComponentNameComponent } from './component-name/component-name.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +30,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    NgxGraphModule
   ],
   providers: [],
   bootstrap: [AppComponent]
