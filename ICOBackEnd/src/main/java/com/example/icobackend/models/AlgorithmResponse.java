@@ -4,17 +4,27 @@ import java.util.List;
 
 public class AlgorithmResponse {
 
-    private List<String> destiniesOrders;
+    private List<Coordinate> routes;
+    private double solutionCost;
 
-    public AlgorithmResponse(List<String> destiniesOrders) {
-        this.destiniesOrders = destiniesOrders;
+    public AlgorithmResponse(List<Coordinate> routes, double solutionCost) {
+        this.routes = routes;
+        this.solutionCost = solutionCost;
     }
 
-    public List<String> getDestiniesOrders() {
-        return destiniesOrders;
+    public List<Coordinate> getRoutes() {
+        return routes;
     }
 
-    public void setDestiniesOrders(List<String> destiniesOrders) {
-        this.destiniesOrders = destiniesOrders;
+    public void setRoutes(List<Coordinate> routes) {
+        this.routes = routes;
+    }
+
+    public double getSolutionCost() {
+        return solutionCost;
+    }
+
+    public void setSolutionCost(double solutionCost) {
+        this.solutionCost = solutionCost;
     }
 }

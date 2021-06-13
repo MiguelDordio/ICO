@@ -24,8 +24,9 @@ public class AlgorithmController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     public AlgorithmResponse getSolutionsEvaluations(@RequestBody AlgorithmRequest algorithmRequest) {
 
+
         VRPAlgorithm vrpAlgorithm = new VRPAlgorithm();
-        vrpAlgorithm.simulate(algorithmRequest);
+        AlgorithmResponse algorithmResponse = vrpAlgorithm.simulate(algorithmRequest);
 
         // fazer coisas com o request
         /*
@@ -37,6 +38,6 @@ public class AlgorithmController {
         destinies.add("City2");
         return new AlgorithmResponse(destinies);
          */
-        return null;
+        return algorithmResponse;
     }
 }
