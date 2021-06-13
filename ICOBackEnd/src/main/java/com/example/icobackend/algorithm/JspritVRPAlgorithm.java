@@ -1,8 +1,7 @@
-package com.example.icobackend.algorithm1;
+package com.example.icobackend.algorithm;
 
 import com.example.icobackend.models.*;
 import com.example.icobackend.models.Vehicle;
-import com.graphhopper.jsprit.analysis.toolbox.GraphStreamViewer;
 import com.graphhopper.jsprit.core.algorithm.VehicleRoutingAlgorithm;
 import com.graphhopper.jsprit.core.algorithm.box.Jsprit;
 import com.graphhopper.jsprit.core.problem.Location;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class VRPAlgorithm {
+public class JspritVRPAlgorithm {
 
     public AlgorithmResponse simulate(AlgorithmRequest algorithmRequest) {
         VehicleRoutingProblem.Builder vrpBuilder = setupRequest(algorithmRequest);

@@ -21,56 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-package com.vrp.app.components;
+package com.tabusearch.components;
 
-public class Node {
-    private int x;
-    private int y;
-    private int id;
-    private int demand;
+import com.example.icobackend.models.Vehicle;
 
-    boolean routable;
+import java.util.ArrayList;
 
-    public Node(int x, int y, int id, int demand) {
-        this.x = x;
-        this.y = y;
-        this.id = id;
-        this.demand = demand;
+public class Route {
+    private final ArrayList<Node> nodes;
+    private double cost;
+    private int ID;
+    private int load;
+    private final int capacity;
+
+    public Route(Vehicle vehicle) {
+        this.cost = 0;
+        this.ID = -1;
+        this.capacity = vehicle.getCapacity();
+        this.load = 0;
+        this.nodes = new ArrayList<Node>();
     }
 
-    public Node(int x, int y, int id) {
-        this.x = x;
-        this.y = y;
-        this.id = id;
+    public ArrayList<Node> getNodes() {
+        return nodes;
     }
 
-    public boolean getRouted() {
-        return routable;
+    public double getCost() {
+        return cost;
     }
 
-    public void setRouted(boolean rt) {
-        this.routable = rt;
+    public int getLoad() {
+        return load;
     }
 
-    public int getX() {
-        return x;
-
+    public int getID() {
+        return ID;
     }
 
-    public int getY() {
-        return y;
-
+    public int getCapacity() {
+        return capacity;
     }
 
-    public int getId() {
-        return id;
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 
-    public void setId(int index) {
-        this.id = index;
+    public void setLoad(int load) {
+        this.load = load;
     }
 
-    public int getDemand() {
-        return demand;
+    public void setID(int idx) {
+        this.ID = idx;
     }
 }

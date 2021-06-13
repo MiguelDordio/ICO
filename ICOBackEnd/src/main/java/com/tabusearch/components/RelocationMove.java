@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-package com.vrp.app.components;
+package com.tabusearch.components;
 
 public class RelocationMove {
     private int positionOfRelocated;

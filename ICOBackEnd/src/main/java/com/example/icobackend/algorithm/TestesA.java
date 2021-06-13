@@ -1,4 +1,4 @@
-package com.example.icobackend.algorithm1;
+package com.example.icobackend.algorithm;
 
 import com.graphhopper.jsprit.analysis.toolbox.GraphStreamViewer;
 import com.graphhopper.jsprit.core.algorithm.VehicleRoutingAlgorithm;

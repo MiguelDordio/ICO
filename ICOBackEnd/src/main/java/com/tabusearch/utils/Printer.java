@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-package com.vrp.app.utils;
+package com.tabusearch.utils;
 
-import com.vrp.app.components.Solution;
+import com.tabusearch.components.Solution;
 
 public class Printer {
     public Printer(){

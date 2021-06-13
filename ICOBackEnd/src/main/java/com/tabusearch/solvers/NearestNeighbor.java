@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-package com.vrp.app.solvers;
+package com.tabusearch.solvers;
 
 import com.example.icobackend.models.AlgorithmRequest;
-import com.vrp.app.Solver;
-import com.vrp.app.components.Node;
-import com.vrp.app.components.Route;
-import com.vrp.app.components.Solution;
+import com.tabusearch.Solver;
+import com.tabusearch.components.Node;
+import com.tabusearch.components.Route;
+import com.tabusearch.components.Solution;
 
 import java.util.ArrayList;
 

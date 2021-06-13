@@ -10,6 +10,11 @@ public class Order {
     private Coordinate destiny;
     private int weight;
 
+    public Order(Coordinate destiny, int weight) {
+        this.destiny = destiny;
+        this.weight = weight;
+    }
+
     public Coordinate getDestiny() {
         return destiny;
     }

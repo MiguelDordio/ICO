@@ -21,57 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-package com.vrp.app.components;
-
-import com.example.icobackend.models.AlgorithmRequest;
-import com.example.icobackend.models.Vehicle;
+package com.tabusearch.components;
 
 import java.util.ArrayList;
 
-public class Route {
-    private ArrayList<Node> nodes;
+public class Solution {
     private double cost;
-    private int ID;
-    private int load;
-    private int capacity;
+    private ArrayList<Route> route;
 
-    public Route(Vehicle vehicle) {
+    public Solution() {
+        this.route = new ArrayList<>();
         this.cost = 0;
-        this.ID = -1;
-        this.capacity = vehicle.getCapacity();
-        this.load = 0;
-        this.nodes = new ArrayList<Node>();
     }
 
-    public ArrayList<Node> getNodes() {
-        return nodes;
+    @SuppressWarnings("unchecked")
+    public static Solution cloneSolution(Solution solution) {
+        Solution out = new Solution();
+        out.setCost(solution.getCost());
+        out.setRoute((ArrayList<Route>) solution.getRoute().clone());
+        return out;
     }
 
     public double getCost() {
         return cost;
     }
 
-    public int getLoad() {
-        return load;
+    public void setCost(double costs) {
+        this.cost = costs;
     }
 
-    public int getID() {
-        return ID;
+    public void setRoute(ArrayList<Route> route) {
+        this.route = route;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public ArrayList<Route> getRoute() {
+        return route;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
-    public void setLoad(int load) {
-        this.load = load;
-    }
-
-    public void setID(int idx) {
-        this.ID = idx;
-    }
 }

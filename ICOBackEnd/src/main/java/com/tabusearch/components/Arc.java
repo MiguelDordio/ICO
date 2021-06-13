@@ -21,41 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-package com.vrp.app.components;
+package com.tabusearch.components;
 
-import java.util.ArrayList;
+public class Arc {
+    private int n1;
+    private int n2;
 
-public class Solution {
-    private double cost;
-    private ArrayList<Route> route;
-
-    public Solution() {
-        this.route = new ArrayList<>();
-        this.cost = 0;
+    public Arc(int a, int b) {
+        this.n1 = a;
+        this.n2 = b;
     }
 
-    @SuppressWarnings("unchecked")
-    public static Solution cloneSolution(Solution solution) {
-        Solution out = new Solution();
-        out.setCost(solution.getCost());
-        out.setRoute((ArrayList<Route>) solution.getRoute().clone());
-        return out;
+    public int getN1() {
+        return n1;
     }
 
-    public double getCost() {
-        return cost;
+    public int getN2() {
+        return n2;
     }
-
-    public void setCost(double costs) {
-        this.cost = costs;
-    }
-
-    public void setRoute(ArrayList<Route> route) {
-        this.route = route;
-    }
-
-    public ArrayList<Route> getRoute() {
-        return route;
-    }
-
 }

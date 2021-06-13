@@ -21,30 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-package com.vrp.app.components;
+package com.tabusearch.components;
 
-public class Arc {
-    private int n1;
-    private int n2;
+public class Node {
+    private int x;
+    private int y;
+    private int id;
+    private int demand;
 
-    public Arc(int a, int b) {
-        this.n1 = a;
-        this.n2 = b;
+    boolean routable;
+
+    public Node(int x, int y, int id, int demand) {
+        this.x = x;
+        this.y = y;
+        this.id = id;
+        this.demand = demand;
     }
 
-    public int getN1() {
-        return n1;
+    public Node(int x, int y, int id) {
+        this.x = x;
+        this.y = y;
+        this.id = id;
     }
 
-    public void setN1(int n1) {
-        this.n1 = n1;
+    public boolean getRouted() {
+        return routable;
     }
 
-    public int getN2() {
-        return n2;
+    public void setRouted(boolean rt) {
+        this.routable = rt;
     }
 
-    public void setN2(int n2) {
-        this.n2 = n2;
+    public int getX() {
+        return x;
+
+    }
+
+    public int getY() {
+        return y;
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int index) {
+        this.id = index;
+    }
+
+    public int getDemand() {
+        return demand;
     }
 }

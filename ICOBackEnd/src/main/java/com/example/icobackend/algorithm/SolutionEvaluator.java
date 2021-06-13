@@ -1,4 +1,4 @@
-package com.example.icobackend.algorithm1;
+package com.example.icobackend.algorithm;
 
 import com.example.icobackend.models.Coordinate;
 

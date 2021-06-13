@@ -1,7 +1,7 @@
-package com.vrp.app;
+package com.tabusearch;
 
 import com.example.icobackend.models.AlgorithmRequest;
-import com.vrp.app.components.Solution;
+import com.tabusearch.components.Solution;
 
 public interface Solver {
     void run(AlgorithmRequest algorithmRequest);

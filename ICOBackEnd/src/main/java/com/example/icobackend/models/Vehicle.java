@@ -8,6 +8,11 @@ public class Vehicle {
     private int capacity;
     private double costPerDistance;
 
+    public Vehicle(int capacity, double costPerDistance) {
+        this.capacity = capacity;
+        this.costPerDistance = costPerDistance;
+    }
+
     public int getCapacity() {
         return capacity;
     }

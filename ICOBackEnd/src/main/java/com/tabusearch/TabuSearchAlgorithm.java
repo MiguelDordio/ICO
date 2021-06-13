@@ -1,35 +1,31 @@
-package com.vrp.app;
+package com.tabusearch;
 
-import com.example.icobackend.algorithm1.SolutionEvaluator;
+import com.example.icobackend.algorithm.SolutionEvaluator;
 import com.example.icobackend.models.AlgorithmRequest;
 import com.example.icobackend.models.AlgorithmResponse;
 import com.example.icobackend.models.Coordinate;
-import com.vrp.app.components.Node;
-import com.vrp.app.components.Route;
-import com.vrp.app.components.Solution;
-import com.vrp.app.solvers.NearestNeighbor;
-import com.vrp.app.solvers.TabuSearch;
-import com.vrp.app.utils.Printer;
+import com.tabusearch.components.Node;
+import com.tabusearch.components.Route;
+import com.tabusearch.components.Solution;
+import com.tabusearch.solvers.NearestNeighbor;
+import com.tabusearch.solvers.TabuSearch;
+import com.tabusearch.utils.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class VRP {
+public class TabuSearchAlgorithm {
     public static final boolean DEBUG_ROUTES = false;
-    private static int numberOfCustomers = 30;
-    private static int numberOfVehicles = 10;
     private static final boolean PRINT = true;
 
     public AlgorithmResponse tabuSearchAlgo(AlgorithmRequest algorithmRequest) {
 
-        numberOfCustomers = algorithmRequest.getOrders().size();
-        numberOfVehicles = algorithmRequest.getVehicles().size();
+        int numberOfCustomers = algorithmRequest.getOrders().size() - 1;
+        int numberOfVehicles = algorithmRequest.getVehicles().size() - 1;
 
         Solution finalSolution;
         String solverName = "";
-
-        //setArgs(args);
 
         ArrayList<Node> allNodes = initCustomers(numberOfCustomers, algorithmRequest);
         Node depot = allNodes.get(0);
@@ -39,7 +35,7 @@ public class VRP {
         NearestNeighbor nearestNeighbor = new NearestNeighbor(numberOfCustomers, numberOfVehicles, depot, distanceMatrix, allNodes);
         nearestNeighbor.run(algorithmRequest);
 
-        TabuSearch tabuSearch = new TabuSearch(numberOfVehicles, numberOfCustomers, allNodes, depot, distanceMatrix);
+        TabuSearch tabuSearch = new TabuSearch(numberOfVehicles, allNodes, distanceMatrix);
         tabuSearch.setSolution(nearestNeighbor.getSolution());
         tabuSearch.run(algorithmRequest);
         finalSolution = tabuSearch.getSolution();
@@ -52,9 +48,7 @@ public class VRP {
         List<Coordinate> routePath = extractRoutePath(finalSolution);
         double solutionCost = SolutionEvaluator.routeEvaluator(routePath);
 
-        AlgorithmResponse algorithmResponse = new AlgorithmResponse(routePath, solutionCost);
-
-        return algorithmResponse;
+        return new AlgorithmResponse(routePath, solutionCost);
     }
 
     private static double[][] initDistanceMatrix(ArrayList<Node> allNodes) {
@@ -86,7 +80,7 @@ public class VRP {
 
         Random ran = new Random(150589);
 
-        for (int i = 1; i <= numberOfCustomers; i++) {
+        for (int i = 1; i <= numberOfCustomers - 1; i++) {
             int x = ran.nextInt(100);
             int y = ran.nextInt(100);
             int demand = algorithmRequest.getOrders().get(i).getWeight();
