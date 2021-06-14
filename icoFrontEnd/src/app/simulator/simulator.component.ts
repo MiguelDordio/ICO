@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Loader } from '@googlemaps/js-api-loader';
+import { Edge, Node } from '@swimlane/ngx-graph';
 import { AlgorithmRequest } from '../models/AlgorithmRequest';
 import { Coordinate } from '../models/Coordinate';
 import { Order } from '../models/Order';
-import { PagesRoute } from '../models/routingPaths';
 import { Vehicle } from '../models/Vehicle';
 import { SimulatorApiService } from '../simulator-api.service';
 
@@ -35,14 +35,16 @@ export class SimulatorComponent implements OnInit {
 	vehicleConsumption!: number;
 	nDestinies!: number;
 	demand!: number;
-	vehicleTypes: string[] = new Array('type_1', 'type_2', 'type_3');
-
 
 	// request
 	depot!: Coordinate;
 	clients: Coordinate[] = new Array();
 	chosenClients: Coordinate[] = new Array();
 	request!: AlgorithmRequest;
+
+	// graph
+	links!: Edge[];
+	nodes!: Node[];
 
 	constructor(
 		private simulatorApi: SimulatorApiService, 
@@ -116,7 +118,8 @@ export class SimulatorComponent implements OnInit {
 		// From step 1 -> 2 - Vehicles
 		else if (this.pageNumber == 1){
 
-			this.prepareLocationsInputs();
+			if (!goBack)
+				this.prepareLocationsInputs();
 
 			this.showMap = !this.showMap;
 			this.pageNumber++;
@@ -125,6 +128,13 @@ export class SimulatorComponent implements OnInit {
 		}
 		// From step 2 -> 3 - Packages
 		else if (this.pageNumber == 2) {
+
+			if(this.packagesForm.controls.packages?.value.length < this.selectedCoordinates.length - 1) {
+				for (let index = this.packagesForm.controls.packages?.value.length; index < this.selectedCoordinates.length - 1; index++) {
+					this.addPackage();
+				}
+			}
+
 			this.pageNumber++;
 			this.pageTitle = "Encomendas";
 			this.pageTip = "Caractize as encomendas dos seus clientes";
@@ -135,6 +145,13 @@ export class SimulatorComponent implements OnInit {
 			this.pageNumber++;
 			this.pageTitle = "Resumo de simulação";
 			this.pageTip = "Confirme os dados";
+		}
+		// From step 4 -> 5 - Simulation Result
+		else if (this.pageNumber == 4) {
+			this.createGraph();
+			this.pageNumber++;
+			this.pageTitle = "Resultado da simulação";
+			this.pageTip = "Verifique as rotas";
 		}
 	}
 
@@ -152,7 +169,7 @@ export class SimulatorComponent implements OnInit {
 
 	addVehicle() {
 		const vhcs = this.vehicleForm.controls.vehicles as FormArray;
-		vhcs.push(this.fb.group(new Vehicle(0, 0, '')));
+		vhcs.push(this.fb.group(new Vehicle(0, 0)));
 	}
 
 	addPackage() {
@@ -199,11 +216,87 @@ export class SimulatorComponent implements OnInit {
 		this.simulatorApi.simulate(this.request).subscribe(resp => {
 			this.apiResponse = resp;
 			console.log("Solution fetched:", resp);
-			this.goToSolutionDisplay()
+			this.changePage(false);
+			//this.goToSolutionDisplay()
 		});
 	}
 
+	/*
 	goToSolutionDisplay() {
-		this.router.navigate(["/" + PagesRoute.SIMULATOR_SOLUTION, this.apiResponse]);
+		this.router.navigate(["/" + PagesRoute.SIMULATOR_SOLUTION, { state: { data: {
+			simulatorSolution: this.apiResponse,
+			simulationRequest: this.request
+		}}}]);
 	}
+	*/
+
+	createGraph() {
+
+		this.links = new Array();
+		this.nodes = new Array();
+
+		// creating the nodes
+		for (let index = 0; index < this.apiResponse.routes.length; index++) {
+			const element = this.apiResponse.routes[index];
+
+			// if its the depot
+			if (element.lat == Math.round(this.request.depot.lat) && element.lng == Math.round(this.request.depot.lng) && index == 0) {
+				this.nodes.push({
+					id: "" + index,
+					label: "Armazem"
+				});
+			} else {
+				// check wich client the order
+				for (let i = 0; i < this.request.orders.length; i++) {
+					const client = this.request.orders[i];
+					if ((element.lat == Math.round(client.destiny.lat) && element.lng == Math.round(client.destiny.lng))) {
+						this.nodes.push({
+							id: "" + index,
+							label: "Cliente " + (i + 1)
+						});
+						break;
+					}
+				}
+			}
+		}
+
+		for (let index = 1; index < this.nodes.length; index++) {
+			const element = this.nodes[index];
+			this.links.push({
+				id: ""+index,
+				source: this.nodes[index - 1].id,
+				target: element.id,
+			});
+		}
+
+		this.links.push({
+			id: ""+this.nodes.length,
+			source: this.nodes[this.nodes.length - 1].id,
+			target: this.nodes[0].id,
+		});
+	}
+
+
+	/*
+		this.currentRoute.queryParams.subscribe((queryParams) => {
+            let params = this.router.getCurrentNavigation().extras.state;
+			
+            if (this.params) {
+                this.simulatorSolution = params[simulationResponse];
+				this.simulatorRequest = params[simulationRequest];
+            }
+        });
+
+		this.simulatorSolution = {
+			routes: new Array(),
+			solutionCost: 0
+		};
+
+		this.simulatorSolution.routes.push(new Coordinate(20, 30));
+		this.simulatorSolution.routes.push(new Coordinate(20, 40));
+		this.simulatorSolution.routes.push(new Coordinate(50, 50));
+		this.simulatorSolution.routes.push(new Coordinate(30, 30));
+		this.simulatorSolution.routes.push(new Coordinate(20, 30));
+
+		*/
 }

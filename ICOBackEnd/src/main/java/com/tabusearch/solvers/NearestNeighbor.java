@@ -60,7 +60,7 @@ public class NearestNeighbor implements Solver {
         Solution solution = new Solution();
         ArrayList<Route> routes = solution.getRoute();
 
-        for (int i = 1; i <= numberOfVehicles; i++) {
+        for (int i = 0; i < numberOfVehicles; i++) {
             Route route_nodes = new Route(algorithmRequest.getVehicles().get(i));
             route_nodes.setID(i);
             routes.add(route_nodes);

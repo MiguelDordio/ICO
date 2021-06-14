@@ -9,7 +9,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SimulatorComponent } from './simulator/simulator.component';
 import { MapComponent } from './map/map.component';
-import { SimulatorSolutionComponent } from './simulator-solution/simulator-solution.component';
 import { ComponentNameComponent } from './component-name/component-name.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
@@ -21,7 +20,6 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
     NavBarComponent,
     SimulatorComponent,
     MapComponent,
-    SimulatorSolutionComponent,
     ComponentNameComponent
   ],
   imports: [

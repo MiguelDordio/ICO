@@ -24,7 +24,7 @@ public class JspritVRPAlgorithm {
 
     public AlgorithmResponse simulate(AlgorithmRequest algorithmRequest) {
         VehicleRoutingProblem.Builder vrpBuilder = setupRequest(algorithmRequest);
-        return calculateVRP(vrpBuilder);
+        return calculateVRP(vrpBuilder, algorithmRequest);
     }
 
     private VehicleRoutingProblem.Builder setupRequest(AlgorithmRequest algorithmRequest) {
@@ -46,7 +46,7 @@ public class JspritVRPAlgorithm {
             Order order = algorithmRequest.getOrders().get(i);
             vrpBuilder.addJob(Service.Builder.newInstance(String.valueOf(i))
                     .addSizeDimension(0, order.getWeight())
-                    .setLocation(Location.newInstance(i+10, i+40))
+                    .setLocation(Location.newInstance((int) Math.round(order.getDestiny().getLat()), (int) Math.round(order.getDestiny().getLng())))
                     .build());
         }
 
@@ -60,7 +60,7 @@ public class JspritVRPAlgorithm {
                     .build();
 
             VehicleImpl fVehicle = VehicleImpl.Builder.newInstance(String.valueOf(i))
-                    .setStartLocation(Location.newInstance(40, 40))
+                    .setStartLocation(Location.newInstance((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())))
                     .setType(type).build();
 
             vrpBuilder.addVehicle(fVehicle);
@@ -69,7 +69,7 @@ public class JspritVRPAlgorithm {
         return vrpBuilder;
     }
 
-    private AlgorithmResponse calculateVRP(VehicleRoutingProblem.Builder vrpBuilder) {
+    private AlgorithmResponse calculateVRP(VehicleRoutingProblem.Builder vrpBuilder, AlgorithmRequest algorithmRequest) {
         //set fleet size finite
         vrpBuilder.setFleetSize(VehicleRoutingProblem.FleetSize.FINITE);
 
@@ -88,7 +88,7 @@ public class JspritVRPAlgorithm {
         //new GraphStreamViewer(vrp, best).setRenderDelay(100).display();
 
         // Calculate algorithm performance
-        List<Coordinate> routePath = extractRoutePath(best);
+        List<Coordinate> routePath = extractRoutePath(best, algorithmRequest);
         double solutionCost = SolutionEvaluator.routeEvaluator(routePath);
         System.out.println(solutionCost);
 
@@ -98,14 +98,15 @@ public class JspritVRPAlgorithm {
     }
 
 
-    private List<Coordinate> extractRoutePath(VehicleRoutingProblemSolution solution) {
+    private List<Coordinate> extractRoutePath(VehicleRoutingProblemSolution solution, AlgorithmRequest algorithmRequest) {
         List<Coordinate> routePath = new ArrayList<>();
+        routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         for (VehicleRoute vehicleRoute: solution.getRoutes()) {
-
             for (TourActivity ta: vehicleRoute.getActivities()) {
                 routePath.add(new Coordinate(ta.getLocation().getCoordinate().getX(), ta.getLocation().getCoordinate().getY()));
             }
         }
+        routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         return routePath;
     }
 }

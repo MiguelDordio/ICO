@@ -1,6 +1,5 @@
 package com.example.icobackend.algorithm;
 
-import com.example.icobackend.algorithm.JspritVRPAlgorithm;
 import com.example.icobackend.models.*;
 import com.tabusearch.TabuSearchAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +9,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @CrossOrigin
@@ -29,6 +25,8 @@ public class AlgorithmController {
         TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
         AlgorithmResponse tabuResponse = tabuSearchAlgorithm.tabuSearchAlgo(algorithmRequest);
 
-        return jspritResponse.getSolutionCost() > tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
+        //return jspritResponse.getSolutionCost() > tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
+
+        return jspritResponse;
     }
 }

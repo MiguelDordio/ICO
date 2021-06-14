@@ -1,7 +1,10 @@
 package com.example.icobackend.models;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class AlgorithmResponse {
 
     private List<Coordinate> routes;

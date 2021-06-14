@@ -56,17 +56,6 @@
                         Indique o custo médio do veiculo por cada 100km percorridos
                     </div>
 
-
-                    <!-- Vehicle type -->
-                    <div style="margin: 25px auto 0 auto;" class="form-group">
-                        <select formControlName="type" class="form-control">
-                            <option value="0">Indique o tipo de veiculo</option>
-                            <option *ngFor="let type of vehicleTypes" value="{{ type }}"> {{ type }}</option>
-                        </select>
-                    </div>
-                    <div id="textExample1" class="form-text">
-                        Indique o tipo de veiculo
-                    </div>
                 </ng-container>
             </div>
         </form>
@@ -94,8 +83,7 @@
                     <div style="margin: 25px auto 0 auto;" class="form-group">
                         <select formControlName="destiny" class="form-control">
                             <option>Indique o destino</option>
-                            <option *ngFor="let client of clients; let j = index" [ngValue]="client">Localização {{ j +
-                                1 }}</option>
+                            <option *ngFor="let client of clients; let j = index" [ngValue]="client">Localização {{ j + 1 }}</option>
                         </select>
                         <div id="textExample1" class="form-text">
                             Indique o destino
@@ -138,7 +126,6 @@
             </h6>
             <p style="margin-bottom: 0 !important;">Capacidade: {{ vehicle.capacity }}</p>
             <p style="margin-bottom: 0 !important;">Custo por 100Km percorridos: {{ vehicle.costPerDistance }}</p>
-            <p style="margin-bottom: 0 !important;">Tipo: {{ vehicle.type }}</p>
         </div>
 
         <!-- Packages -->
@@ -155,6 +142,28 @@
         </div>
     </div>
 
+    <!-- Page 5 - Simulation Result -->
+    <div *ngIf="pageNumber == 5" class="input-form">
+        <div class="div-center">
+            <ngx-graph
+            class="chart-container"
+            [view]="[1000, 600]"
+            [showMiniMap]="false"
+            [links]="links"
+            [nodes]="nodes"
+            >
+            <ng-template #nodeTemplate let-node>
+                <svg:g class="node">
+                  <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                    [attr.fill]="node.data.color" />
+                  <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}
+                  </svg:text>
+                </svg:g>
+              </ng-template>
+            </ngx-graph>
+        </div>
+    </div>
+
     <!-- Page control buttons -->
     <div>
         <button *ngIf="pageNumber > 1" type="button" class="btn btn-primary input-btn" (click)="changePage(true)">
@@ -166,7 +175,7 @@
             Adicionar
         </button>
 
-        <button *ngIf="pageNumber != 4" type="button" class="btn btn-primary input-btn"
+        <button *ngIf="pageNumber < 4" type="button" class="btn btn-primary input-btn"
             style="margin: 25px auto 50px auto; float: right" (click)="changePage(false)">
             Continuar
         </button>
@@ -174,6 +183,11 @@
         <button *ngIf="pageNumber == 4" type="button" class="btn btn-primary input-btn"
             style="margin: 25px auto 50px auto; float: right" (click)="simulate()">
             Simular
+        </button>
+
+        <button *ngIf="pageNumber == 5" type="button" class="btn btn-primary input-btn"
+            style="margin: 25px auto 50px auto; float: right" (click)="simulate()">
+            Sair
         </button>
     </div>
 </div>

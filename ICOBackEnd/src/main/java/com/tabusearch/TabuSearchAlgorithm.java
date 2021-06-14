@@ -4,6 +4,7 @@ import com.example.icobackend.algorithm.SolutionEvaluator;
 import com.example.icobackend.models.AlgorithmRequest;
 import com.example.icobackend.models.AlgorithmResponse;
 import com.example.icobackend.models.Coordinate;
+import com.example.icobackend.models.Order;
 import com.tabusearch.components.Node;
 import com.tabusearch.components.Route;
 import com.tabusearch.components.Solution;
@@ -21,8 +22,8 @@ public class TabuSearchAlgorithm {
 
     public AlgorithmResponse tabuSearchAlgo(AlgorithmRequest algorithmRequest) {
 
-        int numberOfCustomers = algorithmRequest.getOrders().size() - 1;
-        int numberOfVehicles = algorithmRequest.getVehicles().size() - 1;
+        int numberOfCustomers = algorithmRequest.getOrders().size();
+        int numberOfVehicles = algorithmRequest.getVehicles().size();
 
         Solution finalSolution;
         String solverName = "";
@@ -74,16 +75,15 @@ public class TabuSearchAlgorithm {
     private static ArrayList<Node> initCustomers(int numberOfCustomers, AlgorithmRequest algorithmRequest) {
         ArrayList<Node> allNodes = new ArrayList<>();
 
-        Node depot = new Node((int) algorithmRequest.getDepot().getLat(), (int) algorithmRequest.getDepot().getLng(), 0);
+        Node depot = new Node((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng()), 0);
         depot.setRouted(true);
         allNodes.add(depot);
 
-        Random ran = new Random(150589);
-
-        for (int i = 1; i <= numberOfCustomers - 1; i++) {
-            int x = ran.nextInt(100);
-            int y = ran.nextInt(100);
-            int demand = algorithmRequest.getOrders().get(i).getWeight();
+        for (int i = 0; i < numberOfCustomers; i++) {
+            Order order = algorithmRequest.getOrders().get(i);
+            int x = (int) Math.round(order.getDestiny().getLat());
+            int y = (int) Math.round(order.getDestiny().getLng());
+            int demand = order.getWeight();
             Node customer = new Node(x, y, i, demand);
             customer.setRouted(false);
             allNodes.add(customer);

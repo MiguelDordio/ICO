@@ -4,13 +4,11 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { MapComponent } from './map/map.component';
 import { SimulatorComponent } from './simulator/simulator.component';
 import { PagesRoute } from './models/routingPaths';
-import { SimulatorSolutionComponent } from './simulator-solution/simulator-solution.component';
 
 const routes: Routes = [
 	{path: '', component: HomepageComponent},
 	{path: PagesRoute.MAP, component: MapComponent},
-	{path: PagesRoute.SIMULATOR, component: SimulatorComponent},
-	{path: PagesRoute.SIMULATOR_SOLUTION, component: SimulatorSolutionComponent}
+	{path: PagesRoute.SIMULATOR, component: SimulatorComponent}
 ];
 
 @NgModule({
