@@ -23,10 +23,8 @@ public class AlgorithmController {
         AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulate(algorithmRequest);
 
         TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
-        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.tabuSearchAlgo(algorithmRequest);
+        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgo(algorithmRequest, false);
 
-        //return jspritResponse.getSolutionCost() > tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
-
-        return jspritResponse;
+        return jspritResponse.getSolutionCost() > tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
     }
 }

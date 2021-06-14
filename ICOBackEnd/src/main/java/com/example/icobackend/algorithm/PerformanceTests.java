@@ -31,7 +31,7 @@ public class PerformanceTests {
         AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulate(algorithmRequest);
 
         TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
-        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.tabuSearchAlgo(algorithmRequest);
+        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgo(algorithmRequest, false);
 
         System.out.println("Jsprit cost: " + jspritResponse.getSolutionCost());
         System.out.println("TabuSearch cost: " + tabuResponse.getSolutionCost());

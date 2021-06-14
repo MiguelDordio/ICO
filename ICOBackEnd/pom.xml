@@ -53,6 +53,7 @@
             <artifactId>jsprit-analysis</artifactId>
             <version>1.7</version>
         </dependency>
+
     </dependencies>
 
     <build>

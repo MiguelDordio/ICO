@@ -27,19 +27,19 @@ public class JspritVRPAlgorithm {
         return calculateVRP(vrpBuilder, algorithmRequest);
     }
 
+    /**
+     * Significado de capacidade neste algoritmo
+     * Many problems involve multiple capacity dimensions. For example,
+     * in many cases vehicles are constrained by their maximum weight AND volume.
+     * These are two different dimensions. If you want to take them into account in jsprit,
+     * use .addCapacityDimension when specifying your vehicle types. Assign index 0 to weight (e.g. 2700kg)
+     * and 1 to volume (e.g. 17m^3) and add their maximum values as follows:
+     *
+     * VehicleTypeImpl.Builder.newInstance("vehicleType").addCapacityDimension(0, 2700).addCapacityDimension(1,17)
+     */
     private VehicleRoutingProblem.Builder setupRequest(AlgorithmRequest algorithmRequest) {
 
         VehicleRoutingProblem.Builder vrpBuilder = VehicleRoutingProblem.Builder.newInstance();
-
-        /** Significado de capacidade neste algoritmo
-         * Many problems involve multiple capacity dimensions. For example,
-         * in many cases vehicles are constrained by their maximum weight AND volume.
-         * These are two different dimensions. If you want to take them into account in jsprit,
-         * use .addCapacityDimension when specifying your vehicle types. Assign index 0 to weight (e.g. 2700kg)
-         * and 1 to volume (e.g. 17m^3) and add their maximum values as follows:
-         *
-         * VehicleTypeImpl.Builder.newInstance("vehicleType").addCapacityDimension(0, 2700).addCapacityDimension(1,17)
-         */
 
         // Define customers
         for (int i = 0; i < algorithmRequest.getOrders().size(); i++) {
@@ -78,8 +78,7 @@ public class JspritVRPAlgorithm {
 
         VehicleRoutingAlgorithm vra = Jsprit.createAlgorithm(vrp);
 
-        // todo
-        vra.setMaxIterations(100);
+        vra.setMaxIterations(calculateMaxIterations(algorithmRequest));
         Collection<VehicleRoutingProblemSolution> solutions = vra.searchSolutions();
 
         VehicleRoutingProblemSolution best = Solutions.bestOf(solutions);
@@ -92,9 +91,7 @@ public class JspritVRPAlgorithm {
         double solutionCost = SolutionEvaluator.routeEvaluator(routePath);
         System.out.println(solutionCost);
 
-        AlgorithmResponse algorithmResponse = new AlgorithmResponse(routePath, solutionCost);
-
-        return algorithmResponse;
+        return new AlgorithmResponse(routePath, solutionCost);
     }
 
 
@@ -108,5 +105,23 @@ public class JspritVRPAlgorithm {
         }
         routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         return routePath;
+    }
+
+    private int calculateMaxIterations(AlgorithmRequest algorithmRequest) {
+        int maxIterations = 0;
+
+        if (algorithmRequest.getOrders().size() <= 10) {
+            maxIterations = 1;
+        } else if (algorithmRequest.getOrders().size() <= 20) {
+            maxIterations = 5;
+        } else if (algorithmRequest.getOrders().size() <= 50) {
+            maxIterations = 40;
+        } else if (algorithmRequest.getOrders().size() <= 100) {
+            maxIterations = 75;
+        } else if (algorithmRequest.getOrders().size() > 100) {
+            maxIterations = 150;
+        }
+
+        return maxIterations;
     }
 }
