@@ -1,6 +1,7 @@
 package com.tabusearch;
 
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -31,8 +32,7 @@ public class Solution {
         }
     }
 
-    public boolean UnassignedCustomerExists(Node[] Nodes)
-    {
+    public boolean UnassignedCustomerExists(Node[] Nodes) {
         for (int i = 1; i < Nodes.length; i++)
         {
             if (!Nodes[i].IsRouted)
@@ -84,8 +84,10 @@ public class Solution {
                 }
                 else //We DO NOT have any more vehicle to assign. The problem is unsolved under these parameters
                 {
-                    System.out.println("\nThe rest customers do not fit in any Vehicle\n" +
-                            "The problem cannot be resolved under these constrains");
+                    System.out.println("""
+
+                            The rest customers do not fit in any Vehicle
+                            The problem cannot be resolved under these constrains""");
                     System.exit(0);
                 }
             }
@@ -117,17 +119,17 @@ public class Solution {
 
         int SwapIndexA = -1, SwapIndexB = -1, SwapRouteFrom =-1, SwapRouteTo=-1;
 
+        int MAX_ITERATIONS = maxIterations;
         int iteration_number= 0;
 
         int DimensionCustomer = CostMatrix[1].length;
-        int TABU_Matrix[][] = new int[DimensionCustomer+1][DimensionCustomer+1];
+        int[][] TABU_Matrix = new int[DimensionCustomer+1][DimensionCustomer+1];
 
         BestSolutionCost = this.Cost; //Initial Solution Cost
 
         boolean Termination = false;
 
-        while (!Termination)
-        {
+        while (!Termination) {
             iteration_number++;
             BestNCost = Double.MAX_VALUE;
 
@@ -147,7 +149,7 @@ public class Solution {
                                 //If we assign to a different route check capacity constrains
                                 //if in the new route is the same no need to check for capacity
 
-                                if (((VehIndexFrom == VehIndexTo) && ((j == i) || (j == i - 1))) == false)  // Not a move that Changes solution cost
+                                if (!((VehIndexFrom == VehIndexTo) && ((j == i) || (j == i - 1))))  // Not a move that Changes solution cost
                                 {
                                     double MinusCost1 = CostMatrix[RouteFrom.get(i - 1).NodeId][RouteFrom.get(i).NodeId];
                                     double MinusCost2 = CostMatrix[RouteFrom.get(i).NodeId][RouteFrom.get(i + 1).NodeId];
@@ -190,6 +192,7 @@ public class Solution {
 
             RouteFrom =  this.Vehicles[SwapRouteFrom].Route;
             RouteTo =  this.Vehicles[SwapRouteTo].Route;
+
             this.Vehicles[SwapRouteFrom].Route = null;
             this.Vehicles[SwapRouteTo].Route = null;
 
@@ -200,7 +203,7 @@ public class Solution {
             int NodeID_F = RouteTo.get(SwapIndexB).NodeId;
             int NodeID_G = RouteTo.get(SwapIndexB+1).NodeId;
 
-            Random TabuRan = new Random();
+            Random TabuRan = new Random(12345);
             int RendomDelay1 = TabuRan.nextInt(5);
             int RendomDelay2 = TabuRan.nextInt(5);
             int RendomDelay3 = TabuRan.nextInt(5);
@@ -234,13 +237,14 @@ public class Solution {
 
             this.Cost  += BestNCost;
 
-            if (this.Cost <   BestSolutionCost)
-            {
+            /*
+            if (this.Cost < BestSolutionCost) {
                 SaveBestSolution();
             }
+             */
+            SaveBestSolution();
 
-            if (iteration_number == maxIterations)
-            {
+            if (iteration_number == MAX_ITERATIONS) {
                 Termination = true;
             }
         }
@@ -249,13 +253,13 @@ public class Solution {
         this.Cost = BestSolutionCost;
 
         try{
-            PrintWriter writer = new PrintWriter("PastSolutionsTabu.txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("PastSolutionsTabu.txt", StandardCharsets.UTF_8);
             writer.println("Solutions"+"\t");
-            for  (int i = 0; i< PastSolutions.size(); i++){
-                writer.println(PastSolutions.get(i)+"\t");
+            for (Double pastSolution : PastSolutions) {
+                writer.println(pastSolution + "\t");
             }
             writer.close();
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 
     public void SaveBestSolution()
@@ -273,210 +277,6 @@ public class Solution {
                 }
             }
         }
-    }
-
-
-    public void InterRouteLocalSearch(Node[] Nodes,  double[][] CostMatrix) {
-
-        //We use 1-0 exchange move
-        ArrayList<Node> RouteFrom;
-        ArrayList<Node> RouteTo;
-
-        int MovingNodeDemand = 0;
-
-        int VehIndexFrom,VehIndexTo;
-        double BestNCost,NeigthboorCost;
-
-        int SwapIndexA = -1, SwapIndexB = -1, SwapRouteFrom =-1, SwapRouteTo=-1;
-
-        int MAX_ITERATIONS = 1000000;
-        int iteration_number= 0;
-
-        boolean Termination = false;
-
-        while (!Termination)
-        {
-            iteration_number++;
-            BestNCost = Double.MAX_VALUE;
-
-            for (VehIndexFrom = 0;  VehIndexFrom < this.Vehicles.length;  VehIndexFrom++) {
-                RouteFrom = this.Vehicles[VehIndexFrom].Route;
-                int RoutFromLength = RouteFrom.size();
-                for (int i = 1; i < RoutFromLength - 1; i++) { //Not possible to move depot!
-
-                    for (VehIndexTo = 0; VehIndexTo < this.Vehicles.length; VehIndexTo++) {
-                        RouteTo =  this.Vehicles[VehIndexTo].Route;
-                        int RouteTolength = RouteTo.size();
-                        for (int j = 0; (j < RouteTolength - 1); j++) {//Not possible to move after last Depot!
-
-                            MovingNodeDemand = RouteFrom.get(i).demand;
-                            if ( (VehIndexFrom == VehIndexTo) ||  this.Vehicles[VehIndexTo].CheckIfFits(MovingNodeDemand) )
-                            {
-                                if (( (VehIndexFrom == VehIndexTo) && ((j == i) || (j == i - 1)) ) == false)  // Not a move that Changes solution cost
-                                {
-                                    double MinusCost1 = CostMatrix[RouteFrom.get(i - 1).NodeId][RouteFrom.get(i).NodeId];
-                                    double MinusCost2 = CostMatrix[RouteFrom.get(i).NodeId][RouteFrom.get(i + 1).NodeId];
-                                    double MinusCost3 = CostMatrix[RouteTo.get(j).NodeId][RouteTo.get(j + 1).NodeId];
-
-                                    double AddedCost1 = CostMatrix[RouteFrom.get(i - 1).NodeId][RouteFrom.get(i + 1).NodeId];
-                                    double AddedCost2 = CostMatrix[RouteTo.get(j).NodeId][RouteFrom.get(i).NodeId];
-                                    double AddedCost3 = CostMatrix[RouteFrom.get(i).NodeId][RouteTo.get(j + 1).NodeId];
-
-                                    NeigthboorCost = AddedCost1 + AddedCost2 + AddedCost3
-                                            - MinusCost1 - MinusCost2 - MinusCost3;
-
-                                    if (NeigthboorCost < BestNCost) {
-                                        BestNCost = NeigthboorCost;
-                                        SwapIndexA = i;
-                                        SwapIndexB = j;
-                                        SwapRouteFrom = VehIndexFrom;
-                                        SwapRouteTo = VehIndexTo;
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (BestNCost < 0) {// If Best Neightboor Cost is better than the current
-
-                RouteFrom = this.Vehicles[SwapRouteFrom].Route;
-                RouteTo = this.Vehicles[SwapRouteTo].Route;
-                this.Vehicles[SwapRouteFrom].Route = null;
-                this.Vehicles[SwapRouteTo].Route = null;
-
-                Node SwapNode = RouteFrom.get(SwapIndexA);
-
-                RouteFrom.remove(SwapIndexA);
-
-                if (SwapRouteFrom == SwapRouteTo) {
-                    if (SwapIndexA < SwapIndexB) {
-                        RouteTo.add(SwapIndexB, SwapNode);
-                    } else {
-                        RouteTo.add(SwapIndexB + 1, SwapNode);
-                    }
-                }
-                else
-                {
-                    RouteTo.add(SwapIndexB+1, SwapNode);
-                }
-
-                this.Vehicles[SwapRouteFrom].Route = RouteFrom;
-                this.Vehicles[SwapRouteFrom].load -= MovingNodeDemand;
-
-                this.Vehicles[SwapRouteTo].Route = RouteTo;
-                this.Vehicles[SwapRouteTo].load += MovingNodeDemand;
-
-                PastSolutions.add(this.Cost);
-                this.Cost  += BestNCost;
-            }
-            else{
-                Termination = true;
-            }
-
-            if (iteration_number == MAX_ITERATIONS)
-            {
-                Termination = true;
-            }
-        }
-        PastSolutions.add(this.Cost);
-
-        try{
-            PrintWriter writer = new PrintWriter("PastSolutionsInter.txt", "UTF-8");
-            for  (int i = 0; i< PastSolutions.size(); i++){
-                writer.println(PastSolutions.get(i)+"\t");
-            }
-            writer.close();
-        } catch (Exception e) {}
-    }
-
-    public void IntraRouteLocalSearch(Node[] Nodes,  double[][] CostMatrix) {
-
-        //We use 1-0 exchange move
-        ArrayList<Node> rt;
-        double BestNCost,NeigthboorCost;
-
-        int SwapIndexA = -1, SwapIndexB = -1, SwapRoute =-1;
-
-        int MAX_ITERATIONS = 1000000;
-        int iteration_number= 0;
-
-        boolean Termination = false;
-
-        while (!Termination)
-        {
-            iteration_number++;
-            BestNCost = Double.MAX_VALUE;
-
-            for (int VehIndex = 0; VehIndex < this.Vehicles.length; VehIndex++) {
-                rt = this.Vehicles[VehIndex].Route;
-                int RoutLength = rt.size();
-
-                for (int i = 1; i < RoutLength - 1; i++) { //Not possible to move depot!
-
-                    for (int j =  0 ; (j < RoutLength-1); j++) {//Not possible to move after last Depot!
-
-                        if ( ( j != i ) && (j != i-1) ) { // Not a move that cHanges solution cost
-
-                            double MinusCost1 = CostMatrix[rt.get(i-1).NodeId][rt.get(i).NodeId];
-                            double MinusCost2 =  CostMatrix[rt.get(i).NodeId][rt.get(i+1).NodeId];
-                            double MinusCost3 =  CostMatrix[rt.get(j).NodeId][rt.get(j+1).NodeId];
-
-                            double AddedCost1 = CostMatrix[rt.get(i-1).NodeId][rt.get(i+1).NodeId];
-                            double AddedCost2 = CostMatrix[rt.get(j).NodeId][rt.get(i).NodeId];
-                            double AddedCost3 = CostMatrix[rt.get(i).NodeId][rt.get(j+1).NodeId];
-
-                            NeigthboorCost = AddedCost1 + AddedCost2 + AddedCost3
-                                    - MinusCost1 - MinusCost2 - MinusCost3;
-
-                            if (NeigthboorCost < BestNCost) {
-                                BestNCost = NeigthboorCost;
-                                SwapIndexA  = i;
-                                SwapIndexB  = j;
-                                SwapRoute = VehIndex;
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (BestNCost < 0) {
-
-                rt = this.Vehicles[SwapRoute].Route;
-
-                Node SwapNode = rt.get(SwapIndexA);
-
-                rt.remove(SwapIndexA);
-
-                if (SwapIndexA < SwapIndexB)
-                { rt.add(SwapIndexB, SwapNode); }
-                else
-                { rt.add(SwapIndexB+1, SwapNode); }
-
-                PastSolutions.add(this.Cost);
-                this.Cost  += BestNCost;
-            }
-            else{
-                Termination = true;
-            }
-
-            if (iteration_number == MAX_ITERATIONS)
-            {
-                Termination = true;
-            }
-        }
-        PastSolutions.add(this.Cost);
-
-        try{
-            PrintWriter writer = new PrintWriter("PastSolutionsIntra.txt", "UTF-8");
-            for  (int i = 0; i< PastSolutions.size(); i++){
-                writer.println(PastSolutions.get(i)+"\t");
-            }
-            writer.close();
-        } catch (Exception e) {}
     }
 
     public void SolutionPrint(String Solution_Label)//Print Solution In console

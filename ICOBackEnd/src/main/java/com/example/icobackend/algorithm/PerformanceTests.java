@@ -16,7 +16,7 @@ public class PerformanceTests {
 
     public static void main(String[] args) {
 
-        runTest(2, 10);
+        runTest(10, 50);
         //runTest(4, 20);
         //runTest(10, 50);
     }
@@ -31,13 +31,19 @@ public class PerformanceTests {
         AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulate(algorithmRequest);
 
         TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
-        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgo(algorithmRequest, false);
+        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgo(algorithmRequest, true);
 
         System.out.println("Jsprit cost: " + jspritResponse.getSolutionCost());
         System.out.println("TabuSearch cost: " + tabuResponse.getSolutionCost());
 
         AlgorithmResponse finalResponse = jspritResponse.getSolutionCost() > tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
-        System.out.println(finalResponse.getRoutes());
+        System.out.println(finalResponse.getVehicleRoutes());
+    }
+
+    public static AlgorithmRequest generateTest(int numberOfVehicles, int numberOfOrders) {
+        return new AlgorithmRequest(DEPOT,
+                generateDummyVehicles(numberOfVehicles, VEHICLE_CAPACITY, VEHICLE_COST_PER_DISTANCE),
+                generateDummyOrders(numberOfOrders));
     }
 
     private static List<Order> generateDummyOrders(int quantity) {

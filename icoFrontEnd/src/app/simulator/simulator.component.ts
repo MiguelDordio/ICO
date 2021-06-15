@@ -235,22 +235,44 @@ export class SimulatorComponent implements OnInit {
 		this.links = new Array();
 		this.nodes = new Array();
 
-		// creating the nodes
-		for (let index = 0; index < this.apiResponse.routes.length; index++) {
-			const element = this.apiResponse.routes[index];
+		this.apiResponse.vehicleRoutes.forEach((vehicle: Vehicle) => {
+			// creating the nodes
+			this.createNodes(vehicle.route, this.nodes, this.request.depot, this.request.orders);
+
+			// create the links between the nodes
+			let start = this.nodes.length - (vehicle.route.length - 2);
+			this.createLinks(start, this.nodes, this.links);
+
+			// add the link from the last client to the depot
+			this.links.push({
+				id: ""+this.nodes.length,
+				source: this.nodes[this.nodes.length - 1].id,
+				target: this.nodes[0].id,
+			});
+		});
+
+	}
+
+	compareCoordenate(location1: Coordinate, location2: Coordinate) {
+		return location1.lat == Math.round(location2.lat) && location1.lng == Math.round(location2.lng);
+	}
+
+	createNodes(route: Coordinate[], nodes: Node[], depot: Coordinate, clients: Order[]) {
+		for (let index = 0; index < route.length; index++) {
+			const location = route[index];
 
 			// if its the depot
-			if (element.lat == Math.round(this.request.depot.lat) && element.lng == Math.round(this.request.depot.lng) && index == 0) {
-				this.nodes.push({
+			if (this.compareCoordenate(location, depot) && index == 0) {
+				nodes.push({
 					id: "" + index,
 					label: "Armazem"
 				});
 			} else {
 				// check wich client the order
-				for (let i = 0; i < this.request.orders.length; i++) {
-					const client = this.request.orders[i];
-					if ((element.lat == Math.round(client.destiny.lat) && element.lng == Math.round(client.destiny.lng))) {
-						this.nodes.push({
+				for (let i = 0; i < clients.length; i++) {
+					const client = clients[i];
+					if (this.compareCoordenate(location, client.destiny)) {
+						nodes.push({
 							id: "" + index,
 							label: "Cliente " + (i + 1)
 						});
@@ -259,21 +281,17 @@ export class SimulatorComponent implements OnInit {
 				}
 			}
 		}
+	}
 
-		for (let index = 1; index < this.nodes.length; index++) {
-			const element = this.nodes[index];
-			this.links.push({
+	createLinks(start: number, nodes: Node[], links: Edge[]) {
+		for (let index = start; index < nodes.length; index++) {
+			const element = nodes[index];
+			links.push({
 				id: ""+index,
-				source: this.nodes[index - 1].id,
+				source: nodes[index - 1].id,
 				target: element.id,
 			});
 		}
-
-		this.links.push({
-			id: ""+this.nodes.length,
-			source: this.nodes[this.nodes.length - 1].id,
-			target: this.nodes[0].id,
-		});
 	}
 
 

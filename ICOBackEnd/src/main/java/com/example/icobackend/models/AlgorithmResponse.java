@@ -7,20 +7,20 @@ import java.util.List;
 @Data
 public class AlgorithmResponse {
 
-    private List<Coordinate> routes;
+    private List<Vehicle> vehicleRoutes;
     private double solutionCost;
 
-    public AlgorithmResponse(List<Coordinate> routes, double solutionCost) {
-        this.routes = routes;
+    public AlgorithmResponse(List<Vehicle> vehicleRoutes, double solutionCost) {
+        this.vehicleRoutes = vehicleRoutes;
         this.solutionCost = solutionCost;
     }
 
-    public List<Coordinate> getRoutes() {
-        return routes;
+    public List<Vehicle> getVehicleRoutes() {
+        return vehicleRoutes;
     }
 
-    public void setRoutes(List<Coordinate> routes) {
-        this.routes = routes;
+    public void setVehicleRoutes(List<Vehicle> vehicleRoutes) {
+        this.vehicleRoutes = vehicleRoutes;
     }
 
     public double getSolutionCost() {

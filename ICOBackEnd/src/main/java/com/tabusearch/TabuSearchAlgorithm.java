@@ -1,8 +1,16 @@
 package com.tabusearch;
 
+import com.example.icobackend.algorithm.SolutionEvaluator;
 import com.example.icobackend.models.AlgorithmRequest;
 import com.example.icobackend.models.AlgorithmResponse;
+import com.example.icobackend.models.Coordinate;
 import com.example.icobackend.models.Order;
+import com.graphhopper.jsprit.core.problem.solution.VehicleRoutingProblemSolution;
+import com.graphhopper.jsprit.core.problem.solution.route.VehicleRoute;
+import com.graphhopper.jsprit.core.problem.solution.route.activity.TourActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TabuSearchAlgorithm {
 
@@ -29,7 +37,7 @@ public class TabuSearchAlgorithm {
 
         Nodes[0] = depot;
         for (int i = 1; i <= NoOfCustomers; i++) {
-            Order order = algorithmRequest.getOrders().get(i);
+            Order order = algorithmRequest.getOrders().get(i-1);
             Nodes[i] = new Node(i, //Id ) is reserved for depot
                     (int) Math.round(order.getDestiny().getLat()), //Random Cordinates
                     (int) Math.round(order.getDestiny().getLng()),
@@ -39,8 +47,8 @@ public class TabuSearchAlgorithm {
 
         double[][] distanceMatrix = new double[NoOfCustomers + 1][NoOfCustomers + 1];
         double Delta_x, Delta_y;
-        for (int i = 0; i <= NoOfCustomers; i++) {
-            for (int j = i + 1; j <= NoOfCustomers; j++) //The table is summetric to the first diagonal
+        for (int i = 0; i < NoOfCustomers; i++) {
+            for (int j = i + 1; j < NoOfCustomers; j++) //The table is summetric to the first diagonal
             {                                      //Use this to compute distances in O(n/2)
 
                 Delta_x = (Nodes[i].Node_X - Nodes[j].Node_X);
@@ -79,7 +87,30 @@ public class TabuSearchAlgorithm {
 
         Draw.drawRoutes(s, "TABU_Solution");
 
-        return null;
+        // Calculate algorithm performance
+        List<com.example.icobackend.models.Vehicle> vehiclesRoutes = extractRoutePath(s, algorithmRequest);
+        double solutionCost = SolutionEvaluator.routeEvaluator(vehiclesRoutes);
+        System.out.println(solutionCost);
+
+        return new AlgorithmResponse(vehiclesRoutes, solutionCost);
+    }
+
+    private List<com.example.icobackend.models.Vehicle> extractRoutePath(Solution solution, AlgorithmRequest algorithmRequest) {
+        List<com.example.icobackend.models.Vehicle> vehiclesRoutes = new ArrayList<>();
+        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
+        for (Vehicle v: solution.VehiclesForBestSolution) {
+            com.example.icobackend.models.Vehicle vehicle = new com.example.icobackend.models.Vehicle(
+                    v.capacity,
+                    1);
+            List<Coordinate> route = new ArrayList<>();
+            for (Node node: v.Route) {
+                route.add(new Coordinate(node.Node_X, node.Node_Y));
+            }
+            vehicle.setRoute(route);
+            vehiclesRoutes.add(vehicle);
+        }
+        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
+        return vehiclesRoutes;
     }
 
     private int calculateMaxIterations(AlgorithmRequest algorithmRequest) {

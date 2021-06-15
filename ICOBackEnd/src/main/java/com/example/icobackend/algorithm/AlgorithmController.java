@@ -19,6 +19,8 @@ public class AlgorithmController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     public AlgorithmResponse getSolutionsEvaluations(@RequestBody AlgorithmRequest algorithmRequest) {
 
+        //algorithmRequest = PerformanceTests.generateTest(3, 20);
+
         JspritVRPAlgorithm jspritVRPAlgorithm = new JspritVRPAlgorithm();
         AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulate(algorithmRequest);
 

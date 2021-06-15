@@ -87,24 +87,30 @@ public class JspritVRPAlgorithm {
         //new GraphStreamViewer(vrp, best).setRenderDelay(100).display();
 
         // Calculate algorithm performance
-        List<Coordinate> routePath = extractRoutePath(best, algorithmRequest);
-        double solutionCost = SolutionEvaluator.routeEvaluator(routePath);
+        List<Vehicle> vehiclesRoutes = extractRoutePath(best, algorithmRequest);
+        double solutionCost = SolutionEvaluator.routeEvaluator(vehiclesRoutes);
         System.out.println(solutionCost);
 
-        return new AlgorithmResponse(routePath, solutionCost);
+        return new AlgorithmResponse(vehiclesRoutes, solutionCost);
     }
 
 
-    private List<Coordinate> extractRoutePath(VehicleRoutingProblemSolution solution, AlgorithmRequest algorithmRequest) {
-        List<Coordinate> routePath = new ArrayList<>();
-        routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
+    private List<Vehicle> extractRoutePath(VehicleRoutingProblemSolution solution, AlgorithmRequest algorithmRequest) {
+        List<Vehicle> vehiclesRoutes = new ArrayList<>();
+        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         for (VehicleRoute vehicleRoute: solution.getRoutes()) {
+            Vehicle vehicle = new Vehicle(
+                    vehicleRoute.getVehicle().getType().getCapacityDimensions().get(1),
+                    vehicleRoute.getVehicle().getType().getVehicleCostParams().perDistanceUnit);
+            List<Coordinate> route = new ArrayList<>();
             for (TourActivity ta: vehicleRoute.getActivities()) {
-                routePath.add(new Coordinate(ta.getLocation().getCoordinate().getX(), ta.getLocation().getCoordinate().getY()));
+                route.add(new Coordinate(ta.getLocation().getCoordinate().getX(), ta.getLocation().getCoordinate().getY()));
             }
+            vehicle.setRoute(route);
+            vehiclesRoutes.add(vehicle);
         }
-        routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
-        return routePath;
+        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
+        return vehiclesRoutes;
     }
 
     private int calculateMaxIterations(AlgorithmRequest algorithmRequest) {

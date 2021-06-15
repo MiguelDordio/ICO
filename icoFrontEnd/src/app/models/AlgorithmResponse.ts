@@ -1,8 +1,9 @@
 import { Coordinate } from "./Coordinate";
+import { Vehicle } from "./Vehicle";
 
 export class AlgorithmResponse {
 
-    routes!: Coordinate[];
+    vehicleRoutes!: Vehicle[];
     solutionCost!: number;
     
 }
