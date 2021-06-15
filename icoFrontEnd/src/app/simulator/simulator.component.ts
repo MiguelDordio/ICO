@@ -196,16 +196,43 @@ export class SimulatorComponent implements OnInit {
 	 * Simulation
 	 ************************/
 
-	setupRequest() {
+	 setupRequest() {
 		let algoRequest = new AlgorithmRequest();
 
 		this.vehicleForm.controls.vehicles?.value.forEach( (element: Vehicle) => {
 			algoRequest.vehicles.push(element);
 		});
 
+		var somaCapacidadeVeiculos: number = 0 as number
+		for (let carga of algoRequest.vehicles) {
+			somaCapacidadeVeiculos += Number(carga.capacity)
+		}
+
+		var somaPesoPacks: number = 0 as number
+
 		this.packagesForm.controls.packages?.value.forEach( (element: Order) => {
 			algoRequest.orders.push(element);
 		});
+
+		for (let pacote of algoRequest.orders) {
+			somaPesoPacks += Number(pacote.weight)
+		}
+
+		console.log("Peso Packs: " + somaPesoPacks)
+		console.log("Capacidade Veiculos: " + somaCapacidadeVeiculos)
+
+		if(Number(somaPesoPacks) > Number(somaCapacidadeVeiculos)) {
+			if(algoRequest.vehicles.length > 1) {
+				alert("Atingiu a capacidade máxima dos veículos")
+			}
+			else {
+				alert("Atingiu a capacidade máxima do veículo")
+			}
+			
+			for (let pacote of algoRequest.orders) {
+				algoRequest.orders.splice(-1,1)
+			}
+		}
 
 		algoRequest.depot = this.depot;
 
