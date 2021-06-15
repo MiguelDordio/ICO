@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Edge, Node } from '@swimlane/ngx-graph';
 import { AlgorithmRequest } from '../models/AlgorithmRequest';
+import { AlgorithmResponse } from '../models/AlgorithmResponse';
 import { Coordinate } from '../models/Coordinate';
 import { Order } from '../models/Order';
 import { Vehicle } from '../models/Vehicle';
@@ -235,7 +236,11 @@ export class SimulatorComponent implements OnInit {
 		this.links = new Array();
 		this.nodes = new Array();
 
+		// create the depot
+		this.createDepot(this.apiResponse, this.request.depot, this.nodes);
+
 		this.apiResponse.vehicleRoutes.forEach((vehicle: Vehicle) => {
+
 			// creating the nodes
 			this.createNodes(vehicle.route, this.nodes, this.request.depot, this.request.orders);
 
@@ -257,39 +262,45 @@ export class SimulatorComponent implements OnInit {
 		return location1.lat == Math.round(location2.lat) && location1.lng == Math.round(location2.lng);
 	}
 
+	createDepot(response: AlgorithmResponse, depot: Coordinate, nodes: Node[]) {
+		if (response.vehicleRoutes.length > 0) {
+			nodes.push({
+				id: "0",
+				label: "Armazém"
+			});
+		}
+	}
+
 	createNodes(route: Coordinate[], nodes: Node[], depot: Coordinate, clients: Order[]) {
+		let orderIdex: number = nodes.length - 1;
 		for (let index = 0; index < route.length; index++) {
 			const location = route[index];
 
-			// if its the depot
-			if (this.compareCoordenate(location, depot) && index == 0) {
-				nodes.push({
-					id: "" + index,
-					label: "Armazem"
-				});
-			} else {
-				// check wich client the order
-				for (let i = 0; i < clients.length; i++) {
-					const client = clients[i];
-					if (this.compareCoordenate(location, client.destiny)) {
-						nodes.push({
-							id: "" + index,
-							label: "Cliente " + (i + 1)
-						});
-						break;
-					}
+			// check wich client the order
+			for (let i = 0; i < clients.length; i++) {
+				const client = clients[i];
+				if (this.compareCoordenate(location, client.destiny)) {
+					nodes.push({
+						id: "" + (orderIdex + 1),
+						label: "Cliente " + (i + 1)
+					});
+					orderIdex++;
+					break;
 				}
 			}
 		}
 	}
 
 	createLinks(start: number, nodes: Node[], links: Edge[]) {
-		for (let index = start; index < nodes.length; index++) {
-			const element = nodes[index];
+		for (let index = 1; index < nodes.length; index++) {
+			const from = nodes[index - 1];
+			if (index == 1)
+				index = start;
+			const to = nodes[index];
 			links.push({
 				id: ""+index,
-				source: nodes[index - 1].id,
-				target: element.id,
+				source: from.id,
+				target: to.id,
 			});
 		}
 	}
