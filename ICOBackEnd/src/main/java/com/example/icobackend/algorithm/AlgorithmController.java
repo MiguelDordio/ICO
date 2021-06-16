@@ -24,15 +24,19 @@ public class AlgorithmController {
             AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulateAuto(algorithmRequest);
 
             TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
-            AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoAuto(algorithmRequest, false);
+            AlgorithmResponse tabuResponse;
+            try {
+                tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoAuto(algorithmRequest, false);
+            } catch (Exception e) {
+                return jspritResponse;
+            }
 
             return jspritResponse.getSolutionCost() < tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
         }
         else{
             TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
-            AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoAuto(algorithmRequest, false);
 
-            return tabuResponse;
+            return tabuSearchAlgorithm.vrpSearchAlgoAuto(algorithmRequest, false);
         }
     }
 }
