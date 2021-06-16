@@ -19,14 +19,20 @@ public class AlgorithmController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     public AlgorithmResponse getSolutionsEvaluations(@RequestBody AlgorithmRequest algorithmRequest) {
 
-        //algorithmRequest = PerformanceTests.generateTest(3, 20);
+        if(algorithmRequest.getOrders().size() <= 200) {
+            JspritVRPAlgorithm jspritVRPAlgorithm = new JspritVRPAlgorithm();
+            AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulateAuto(algorithmRequest);
 
-        JspritVRPAlgorithm jspritVRPAlgorithm = new JspritVRPAlgorithm();
-        AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulateAuto(algorithmRequest);
+            TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
+            AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoAuto(algorithmRequest, false);
 
-        TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
-        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoAuto(algorithmRequest, false);
+            return jspritResponse.getSolutionCost() < tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
+        }
+        else{
+            TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
+            AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoAuto(algorithmRequest, false);
 
-        return jspritResponse.getSolutionCost() < tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
+            return tabuResponse;
+        }
     }
 }
