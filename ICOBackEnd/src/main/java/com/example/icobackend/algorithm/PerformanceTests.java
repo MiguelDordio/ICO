@@ -6,6 +6,7 @@ import com.tabusearch.TabuSearchAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PerformanceTests {
 
@@ -17,10 +18,13 @@ public class PerformanceTests {
 
     public static void main(String[] args) {
 
-        runTest(2, 10, 1, false, true, true);
-        runTest(2, 10, 5, false, true, true);
-        runTest(2, 10, 10, false, true, true);
-        runTest(2, 10, 20, false, true, true);
+        runTest(20, 100, 1, false, true, true);
+        runTest(20, 100, 30, false, true, true);
+        runTest(20, 100, 50, false, true, true);
+        runTest(20, 100, 100, false, true, true);
+        runTest(20, 100, 150, false, true, true);
+
+
     }
 
     private static void runTest(int numberOfVehicles, int numberOfOrders, int maxIterations, boolean printDetails
@@ -73,9 +77,14 @@ public class PerformanceTests {
 
     private static List<Order> generateDummyOrders(int quantity) {
         List<Order> orderList = new ArrayList<>();
-
+        Random rand = new Random(100);
         for (int i = 0; i < quantity; i++) {
-            orderList.add(new Order(new Coordinate(i + 2, i + 5), ORDER_WEIGHT));
+
+            // Portugal continental varia aprox. 4 graus em latitude e 2 em longitude
+            Double randLat = rand.nextDouble()*4;
+            Double randLong = rand.nextDouble()*2;
+            orderList.add(new Order(new Coordinate(randLat, randLong), ORDER_WEIGHT));
+
         }
 
         return orderList;

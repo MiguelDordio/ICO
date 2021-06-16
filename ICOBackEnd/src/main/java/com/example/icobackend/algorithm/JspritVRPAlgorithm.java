@@ -129,13 +129,13 @@ public class JspritVRPAlgorithm {
         int maxIterations = 0;
 
         if (algorithmRequest.getOrders().size() <= 10) {
-            maxIterations = 1;
-        } else if (algorithmRequest.getOrders().size() <= 20) {
             maxIterations = 5;
+        } else if (algorithmRequest.getOrders().size() <= 20) {
+            maxIterations = 10;
         } else if (algorithmRequest.getOrders().size() <= 50) {
-            maxIterations = 30;
+            maxIterations = 100;
         } else if (algorithmRequest.getOrders().size() <= 100) {
-            maxIterations = 60;
+            maxIterations = 100;
         } else if (algorithmRequest.getOrders().size() > 100) {
             maxIterations = 150;
         }

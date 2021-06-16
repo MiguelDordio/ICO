@@ -125,15 +125,15 @@ public class TabuSearchAlgorithm {
         int maxIterations = 0;
 
         if (algorithmRequest.getOrders().size() <= 10) {
-            maxIterations = 1;
-        } else if (algorithmRequest.getOrders().size() <= 20) {
             maxIterations = 5;
+        } else if (algorithmRequest.getOrders().size() <= 20) {
+            maxIterations = 20;
         } else if (algorithmRequest.getOrders().size() <= 50) {
             maxIterations = 50;
         } else if (algorithmRequest.getOrders().size() <= 100) {
-            maxIterations = 50;
+            maxIterations = 30;
         } else if (algorithmRequest.getOrders().size() > 100) {
-            maxIterations = 150;
+            maxIterations = 30;
         }
 
         return maxIterations;
