@@ -266,22 +266,24 @@ export class SimulatorComponent implements OnInit {
 		// create the depot
 		this.createDepot(this.apiResponse, this.request.depot, this.nodes);
 
-		this.apiResponse.vehicleRoutes.forEach((vehicle: Vehicle) => {
-
+		for (let index = 0; index < this.apiResponse.vehicleRoutes.length; index++) {
+			const vehicle: Vehicle = this.apiResponse.vehicleRoutes[index];
+			
 			// creating the nodes
 			this.createNodes(vehicle.route, this.nodes, this.request.depot, this.request.orders);
 
 			// create the links between the nodes
 			let start = this.nodes.length - (vehicle.route.length - 2);
-			this.createLinks(start, this.nodes, this.links);
+			this.createLinks(start, this.nodes, this.links, index);
 
 			// add the link from the last client to the depot
 			this.links.push({
 				id: ""+this.nodes.length,
 				source: this.nodes[this.nodes.length - 1].id,
 				target: this.nodes[0].id,
+				label: "Veiculo " + (index + 1)
 			});
-		});
+		}
 
 	}
 
@@ -318,7 +320,7 @@ export class SimulatorComponent implements OnInit {
 		}
 	}
 
-	createLinks(start: number, nodes: Node[], links: Edge[]) {
+	createLinks(start: number, nodes: Node[], links: Edge[], vehicleId: number) {
 		for (let index = 1; index < nodes.length; index++) {
 			const from = nodes[index - 1];
 			if (index == 1)
@@ -328,6 +330,7 @@ export class SimulatorComponent implements OnInit {
 				id: ""+index,
 				source: from.id,
 				target: to.id,
+				label: "Veiculo " + (vehicleId + 1)
 			});
 		}
 	}

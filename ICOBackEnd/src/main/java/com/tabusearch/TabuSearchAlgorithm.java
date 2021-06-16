@@ -14,9 +14,15 @@ import java.util.List;
 
 public class TabuSearchAlgorithm {
 
-    public AlgorithmResponse vrpSearchAlgo(AlgorithmRequest algorithmRequest, boolean printDistanceMatrix) {
+    public AlgorithmResponse vrpSearchAlgoManual(AlgorithmRequest algorithmRequest, boolean printDistanceMatrix, int maxIterations, boolean printDetails) {
+        return vrpSearchAlgo(algorithmRequest, printDistanceMatrix, maxIterations, printDetails);
+    }
 
-        int maxIterations = calculateMaxIterations(algorithmRequest);
+    public AlgorithmResponse vrpSearchAlgoAuto(AlgorithmRequest algorithmRequest, boolean printDistanceMatrix) {
+        return vrpSearchAlgo(algorithmRequest, printDistanceMatrix, calculateMaxIterations(algorithmRequest), true);
+    }
+
+    private AlgorithmResponse vrpSearchAlgo(AlgorithmRequest algorithmRequest, boolean printDistanceMatrix, int iterations, boolean printDetails) {
 
         //Problem Parameters
         int NoOfCustomers = algorithmRequest.getOrders().size();
@@ -81,11 +87,13 @@ public class TabuSearchAlgorithm {
 
         s.GreedySolution(Nodes, distanceMatrix);
 
-        s.TabuSearch(TABU_Horizon, distanceMatrix, maxIterations);
+        s.TabuSearch(TABU_Horizon, distanceMatrix, iterations);
 
-        s.SolutionPrint("Solution After Tabu Search");
+        if (printDetails) {
+            s.SolutionPrint("Solution After Tabu Search");
+        }
 
-        Draw.drawRoutes(s, "TABU_Solution");
+        System.out.println("TABUSEARCH Cost: " + s.Cost);
 
         // Calculate algorithm performance
         List<com.example.icobackend.models.Vehicle> vehiclesRoutes = extractRoutePath(s, algorithmRequest);
@@ -121,9 +129,9 @@ public class TabuSearchAlgorithm {
         } else if (algorithmRequest.getOrders().size() <= 20) {
             maxIterations = 5;
         } else if (algorithmRequest.getOrders().size() <= 50) {
-            maxIterations = 40;
+            maxIterations = 50;
         } else if (algorithmRequest.getOrders().size() <= 100) {
-            maxIterations = 75;
+            maxIterations = 50;
         } else if (algorithmRequest.getOrders().size() > 100) {
             maxIterations = 150;
         }

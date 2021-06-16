@@ -1,6 +1,7 @@
 package com.example.icobackend.algorithm;
 
 import com.example.icobackend.models.*;
+import com.graphhopper.jsprit.analysis.toolbox.StopWatch;
 import com.tabusearch.TabuSearchAlgorithm;
 
 import java.util.ArrayList;
@@ -16,28 +17,52 @@ public class PerformanceTests {
 
     public static void main(String[] args) {
 
-        runTest(10, 50);
-        //runTest(4, 20);
-        //runTest(10, 50);
+        runTest(2, 10, 1, false, true, true);
+        runTest(2, 10, 5, false, true, true);
+        runTest(2, 10, 10, false, true, true);
+        runTest(2, 10, 20, false, true, true);
     }
 
-    private static void runTest(int numberOfVehicles, int numberOfOrders) {
+    private static void runTest(int numberOfVehicles, int numberOfOrders, int maxIterations, boolean printDetails
+            , boolean runJsprit, boolean runTabu) {
 
+        System.out.println("----- Begin Test ----");
         AlgorithmRequest algorithmRequest = new AlgorithmRequest(DEPOT,
                 generateDummyVehicles(numberOfVehicles, VEHICLE_CAPACITY, VEHICLE_COST_PER_DISTANCE),
                 generateDummyOrders(numberOfOrders));
 
-        JspritVRPAlgorithm jspritVRPAlgorithm = new JspritVRPAlgorithm();
-        AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulate(algorithmRequest);
+        if (runJsprit && runTabu) {
+            JspritVRPAlgorithm jspritVRPAlgorithm = new JspritVRPAlgorithm();
+            AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulateManual(algorithmRequest, maxIterations,
+                    printDetails);
+            System.out.println("Jsprit cost: " + jspritResponse.getSolutionCost());
 
-        TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
-        AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgo(algorithmRequest, true);
+            StopWatch stopwatch = new StopWatch();
+            stopwatch.start();
+            TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
+            AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoManual(algorithmRequest, false, maxIterations, printDetails);
+            stopwatch.stop();
+            System.out.println("TabuSearch cost: " + tabuResponse.getSolutionCost());
+            System.out.println("Runtime: " + stopwatch.getCompTimeInSeconds());
 
-        System.out.println("Jsprit cost: " + jspritResponse.getSolutionCost());
-        System.out.println("TabuSearch cost: " + tabuResponse.getSolutionCost());
+            System.out.print("Best performer: ");
+            System.out.println(jspritResponse.getSolutionCost() < tabuResponse.getSolutionCost() ? "JSPRIT" : "TABU_SEARCH");
+        } else if (runJsprit) {
+            JspritVRPAlgorithm jspritVRPAlgorithm = new JspritVRPAlgorithm();
+            AlgorithmResponse jspritResponse = jspritVRPAlgorithm.simulateManual(algorithmRequest, maxIterations,
+                    printDetails);
+            System.out.println("Jsprit cost: " + jspritResponse.getSolutionCost());
+        } else if (runTabu) {
+            StopWatch stopwatch = new StopWatch();
+            stopwatch.start();
+            TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm();
+            AlgorithmResponse tabuResponse = tabuSearchAlgorithm.vrpSearchAlgoManual(algorithmRequest, false, maxIterations, printDetails);
+            stopwatch.stop();
+            System.out.println("TabuSearch cost: " + tabuResponse.getSolutionCost());
+            System.out.println("Runtime: " + stopwatch.getCompTimeInSeconds());
+        }
 
-        AlgorithmResponse finalResponse = jspritResponse.getSolutionCost() > tabuResponse.getSolutionCost() ? jspritResponse : tabuResponse;
-        System.out.println(finalResponse.getVehicleRoutes());
+        System.out.println("----- End Test ----");
     }
 
     public static AlgorithmRequest generateTest(int numberOfVehicles, int numberOfOrders) {
@@ -50,7 +75,7 @@ public class PerformanceTests {
         List<Order> orderList = new ArrayList<>();
 
         for (int i = 0; i < quantity; i++) {
-            orderList.add(new Order(new Coordinate(i + 50, i + 20), ORDER_WEIGHT));
+            orderList.add(new Order(new Coordinate(i + 2, i + 5), ORDER_WEIGHT));
         }
 
         return orderList;

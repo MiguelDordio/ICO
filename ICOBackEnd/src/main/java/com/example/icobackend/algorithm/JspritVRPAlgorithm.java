@@ -22,9 +22,18 @@ import java.util.List;
 
 public class JspritVRPAlgorithm {
 
-    public AlgorithmResponse simulate(AlgorithmRequest algorithmRequest) {
+    public AlgorithmResponse simulateManual(AlgorithmRequest algorithmRequest, int maxIterations, boolean printDetails) {
+        return simulate(algorithmRequest, maxIterations, printDetails);
+    }
+
+    public AlgorithmResponse simulateAuto(AlgorithmRequest algorithmRequest) {
+        return simulate(algorithmRequest, calculateMaxIterations(algorithmRequest), true);
+    }
+
+    public AlgorithmResponse simulate(AlgorithmRequest algorithmRequest, int maxIterations, boolean printDetails) {
+        System.out.println("----- JSPRIT -----");
         VehicleRoutingProblem.Builder vrpBuilder = setupRequest(algorithmRequest);
-        return calculateVRP(vrpBuilder, algorithmRequest);
+        return calculateVRP(vrpBuilder, algorithmRequest, maxIterations, printDetails);
     }
 
     /**
@@ -69,7 +78,7 @@ public class JspritVRPAlgorithm {
         return vrpBuilder;
     }
 
-    private AlgorithmResponse calculateVRP(VehicleRoutingProblem.Builder vrpBuilder, AlgorithmRequest algorithmRequest) {
+    private AlgorithmResponse calculateVRP(VehicleRoutingProblem.Builder vrpBuilder, AlgorithmRequest algorithmRequest, int maxIterarions, boolean printDetails) {
         //set fleet size finite
         vrpBuilder.setFleetSize(VehicleRoutingProblem.FleetSize.FINITE);
 
@@ -78,18 +87,21 @@ public class JspritVRPAlgorithm {
 
         VehicleRoutingAlgorithm vra = Jsprit.createAlgorithm(vrp);
 
-        vra.setMaxIterations(calculateMaxIterations(algorithmRequest));
+        vra.setMaxIterations(maxIterarions);
         Collection<VehicleRoutingProblemSolution> solutions = vra.searchSolutions();
 
         VehicleRoutingProblemSolution best = Solutions.bestOf(solutions);
 
-        SolutionPrinter.print(vrp, best, SolutionPrinter.Print.VERBOSE);
+        System.out.println("JSPRIT Cost: " + best.getCost());
+        System.out.println("---- JSPRIT END -----");
+
+        if (printDetails)
+            SolutionPrinter.print(vrp, best, SolutionPrinter.Print.VERBOSE);
         //new GraphStreamViewer(vrp, best).setRenderDelay(100).display();
 
         // Calculate algorithm performance
         List<Vehicle> vehiclesRoutes = extractRoutePath(best, algorithmRequest);
         double solutionCost = SolutionEvaluator.routeEvaluator(vehiclesRoutes);
-        System.out.println(solutionCost);
 
         return new AlgorithmResponse(vehiclesRoutes, solutionCost);
     }
@@ -97,19 +109,19 @@ public class JspritVRPAlgorithm {
 
     private List<Vehicle> extractRoutePath(VehicleRoutingProblemSolution solution, AlgorithmRequest algorithmRequest) {
         List<Vehicle> vehiclesRoutes = new ArrayList<>();
-        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         for (VehicleRoute vehicleRoute: solution.getRoutes()) {
             Vehicle vehicle = new Vehicle(
                     vehicleRoute.getVehicle().getType().getCapacityDimensions().get(1),
                     vehicleRoute.getVehicle().getType().getVehicleCostParams().perDistanceUnit);
             List<Coordinate> route = new ArrayList<>();
+            route.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
             for (TourActivity ta: vehicleRoute.getActivities()) {
                 route.add(new Coordinate(ta.getLocation().getCoordinate().getX(), ta.getLocation().getCoordinate().getY()));
             }
+            route.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
             vehicle.setRoute(route);
             vehiclesRoutes.add(vehicle);
         }
-        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         return vehiclesRoutes;
     }
 
@@ -121,9 +133,9 @@ public class JspritVRPAlgorithm {
         } else if (algorithmRequest.getOrders().size() <= 20) {
             maxIterations = 5;
         } else if (algorithmRequest.getOrders().size() <= 50) {
-            maxIterations = 40;
+            maxIterations = 30;
         } else if (algorithmRequest.getOrders().size() <= 100) {
-            maxIterations = 75;
+            maxIterations = 60;
         } else if (algorithmRequest.getOrders().size() > 100) {
             maxIterations = 150;
         }
