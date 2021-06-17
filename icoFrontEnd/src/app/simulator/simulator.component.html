@@ -124,7 +124,7 @@
             <h6>
                 <p style="margin: 25px auto 0 auto;">Veículo {{ i + 1 }}</p>
             </h6>
-            <p style="margin-bottom: 0 !important;">Capacidade: {{ vehicle.capacity }}</p>
+            <p style="margin-bottom: 0 !important;">Capacidade: {{ vehicle.capacity }} Kg</p>
             <p style="margin-bottom: 0 !important;">Custo por 100Km percorridos: {{ vehicle.costPerDistance }}</p>
         </div>
 
@@ -136,7 +136,7 @@
             <h6>
                 <p style="margin: 25px auto 0 auto;">Encomenda {{ i + 1 }}</p>
             </h6>
-            <p style="margin-bottom: 0 !important;">Peso: {{ package.weight }}</p>
+            <p style="margin-bottom: 0 !important;">Peso: {{ package.weight }} Kg</p>
             <p style="margin-bottom: 0 !important;">Cliente destino: Lat: {{ package.destiny.lat }} : Lng: {{
                 package.destiny.lng }}</p>
         </div>
@@ -147,7 +147,7 @@
         <div class="div-center">
             <ngx-graph
             class="chart-container"
-            [view]="[3000, 3000]"
+            [view]="[1000, 1000]"
             [showMiniMap]="false"
             [links]="links"
             [nodes]="nodes"

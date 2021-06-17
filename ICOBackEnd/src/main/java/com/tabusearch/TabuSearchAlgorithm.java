@@ -5,9 +5,6 @@ import com.example.icobackend.models.AlgorithmRequest;
 import com.example.icobackend.models.AlgorithmResponse;
 import com.example.icobackend.models.Coordinate;
 import com.example.icobackend.models.Order;
-import com.graphhopper.jsprit.core.problem.solution.VehicleRoutingProblemSolution;
-import com.graphhopper.jsprit.core.problem.solution.route.VehicleRoute;
-import com.graphhopper.jsprit.core.problem.solution.route.activity.TourActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,16 +93,15 @@ public class TabuSearchAlgorithm {
         System.out.println("TABUSEARCH Cost: " + s.Cost);
 
         // Calculate algorithm performance
-        List<com.example.icobackend.models.Vehicle> vehiclesRoutes = extractRoutePath(s, algorithmRequest);
+        List<com.example.icobackend.models.Vehicle> vehiclesRoutes = extractRoutePath(s);
         double solutionCost = SolutionEvaluator.routeEvaluator(vehiclesRoutes);
         System.out.println(solutionCost);
 
         return new AlgorithmResponse(vehiclesRoutes, solutionCost);
     }
 
-    private List<com.example.icobackend.models.Vehicle> extractRoutePath(Solution solution, AlgorithmRequest algorithmRequest) {
+    private List<com.example.icobackend.models.Vehicle> extractRoutePath(Solution solution) {
         List<com.example.icobackend.models.Vehicle> vehiclesRoutes = new ArrayList<>();
-        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         for (Vehicle v: solution.VehiclesForBestSolution) {
             com.example.icobackend.models.Vehicle vehicle = new com.example.icobackend.models.Vehicle(
                     v.capacity,
@@ -117,7 +113,6 @@ public class TabuSearchAlgorithm {
             vehicle.setRoute(route);
             vehiclesRoutes.add(vehicle);
         }
-        //routePath.add(new Coordinate((int) Math.round(algorithmRequest.getDepot().getLat()), (int) Math.round(algorithmRequest.getDepot().getLng())));
         return vehiclesRoutes;
     }
 
